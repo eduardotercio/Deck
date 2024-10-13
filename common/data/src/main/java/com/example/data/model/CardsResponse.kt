@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CardResponse(
+data class CardsResponse(
     @SerialName("success")
     val isSuccess: Boolean,
 
@@ -15,5 +15,5 @@ data class CardResponse(
     val cards: List<CardData>,
 
     @SerialName("remaining")
-    val cardsRemaining: Int,
+    val remainingCards: Int,
 )

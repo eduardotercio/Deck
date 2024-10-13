@@ -12,7 +12,10 @@ data class PileResponse(
     val deckId: String,
 
     @SerialName("remaining")
-    val cardsRemaining: Int,
+    val remainingCards: Int? = null,
+
+    @SerialName("cards")
+    val cards: List<CardData>? = null,
 
     @SerialName("piles")
     val piles: Map<String, Pile>
