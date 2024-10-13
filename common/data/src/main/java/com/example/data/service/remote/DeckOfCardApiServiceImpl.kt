@@ -9,6 +9,7 @@ import com.example.data.util.Const.CARDS
 import com.example.data.util.Const.COUNT
 import com.example.data.util.Const.DRAW
 import com.example.data.util.Const.HAND
+import com.example.data.util.Const.LIST
 import com.example.data.util.Const.NEW
 import com.example.data.util.Const.PILE
 import com.example.data.util.Const.REMAINING
@@ -27,6 +28,13 @@ class DeckOfCardApiServiceImpl(
         val request = httpClient.get(url)
 
         return request.body<DeckResponse>()
+    }
+
+    override suspend fun getPiles(deckId: String, pileName: String): PileResponse {
+        val url = BASE_URL.plus(deckId).plus(PILE).plus(pileName).plus(LIST)
+        val request = httpClient.get(url)
+
+        return request.body<PileResponse>()
     }
 
     override suspend fun drawCardFromDeck(deckId: String): CardsResponse {

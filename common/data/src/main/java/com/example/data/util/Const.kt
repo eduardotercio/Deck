@@ -9,6 +9,7 @@ object Const {
     const val PILE = "pile/"
     const val ADD = "add/"
     const val RETURN = "return/"
+    const val LIST = "list/"
 
     // Pile names
     const val HAND = "hand/"

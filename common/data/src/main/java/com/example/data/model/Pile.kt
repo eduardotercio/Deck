@@ -6,5 +6,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Pile(
     @SerialName("remaining")
-    val remainingCards: Int
+    val remainingCards: Int,
+
+    @SerialName("cards")
+    val cards: List<CardData>? = null,
 )
