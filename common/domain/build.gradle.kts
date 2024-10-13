@@ -1,13 +1,10 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.jetbrains.compose)
-    alias(libs.plugins.kotlinx.serialization)
-    alias(libs.plugins.compose.compiler)
 }
 
 android {
-    namespace = "com.example.data"
+    namespace = "com.example.domain"
     compileSdk = 34
 
     defaultConfig {
@@ -37,13 +34,18 @@ android {
 
 dependencies {
 
-    implementation(project(":common:domain"))
+    // koin
+    api(libs.koin.android)
+    api(libs.koin.core)
+    api(libs.koin.ktor)
+    api(libs.koin.compose)
+    api(libs.koin.androidx.compose)
 
-    // ktor
-    implementation(libs.ktor.client)
-    implementation(libs.ktor.cio)
-    implementation(libs.ktor.client.content.negotiation)
-    implementation(libs.ktor.serialization.kotlinx.json)
+    // coroutines
+    api(libs.kotlinx.coroutines.core)
+
+    // Serialization
+    api(libs.kotlinx.serialization.json)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
