@@ -21,4 +21,9 @@ dependencyResolutionManagement {
 
 rootProject.name = "Deck"
 include(":app")
- 
+include(":common")
+include(":common:designsystem")
+include(":feature")
+include(":feature:deck")
+include(":common:data")
+include(":common:presentation")
