@@ -37,24 +37,13 @@ android {
 
 dependencies {
 
+    implementation(project(":common:domain"))
+
     // ktor
-    api(libs.ktor.client)
-    api(libs.ktor.cio)
-    api(libs.ktor.client.content.negotiation)
-    api(libs.ktor.serialization.kotlinx.json)
-
-    // koin
-    api(libs.koin.android)
-    api(libs.koin.core)
-    api(libs.koin.ktor)
-    api(libs.koin.compose)
-    api(libs.koin.androidx.compose)
-
-    // coroutines
-    api(libs.kotlinx.coroutines.core)
-
-    // Serialization
-    api(libs.kotlinx.serialization.json)
+    implementation(libs.ktor.client)
+    implementation(libs.ktor.cio)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

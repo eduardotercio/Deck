@@ -18,5 +18,5 @@ data class PileResponse(
     val cards: List<CardData>? = null,
 
     @SerialName("piles")
-    val piles: Map<String, Pile>
+    val piles: Map<String, PileData>
 )

@@ -1,6 +1,5 @@
 package com.example.data.service.remote
 
-import com.example.data.model.CardsResponse
 import com.example.data.model.DeckResponse
 import com.example.data.model.PileResponse
 import com.example.data.util.Const.ADD
@@ -37,12 +36,12 @@ class DeckOfCardApiServiceImpl(
         return request.body<PileResponse>()
     }
 
-    override suspend fun drawCardFromDeck(deckId: String): CardsResponse {
+    override suspend fun drawCardFromDeck(deckId: String): DeckResponse {
         val url = BASE_URL.plus(deckId).plus(DRAW)
         val request = httpClient.get(url) {
             parameter(COUNT, ONE)
         }
-        return request.body<CardsResponse>()
+        return request.body<DeckResponse>()
     }
 
     override suspend fun shuffleDeck(deckId: String): DeckResponse {
@@ -53,7 +52,7 @@ class DeckOfCardApiServiceImpl(
         return request.body<DeckResponse>()
     }
 
-    override suspend fun returnCardToDeck(cardCode: String, deckId: String): DeckResponse {
+    override suspend fun returnCardToDeck(deckId: String, cardCode: String): DeckResponse {
         val url = BASE_URL.plus(deckId).plus(PILE).plus(HAND).plus(RETURN)
         val request = httpClient.get(url) {
             parameter(CARDS, cardCode)
