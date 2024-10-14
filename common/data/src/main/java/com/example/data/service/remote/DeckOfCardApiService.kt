@@ -13,7 +13,7 @@ interface DeckOfCardApiService {
 
     suspend fun shuffleDeck(deckId: String): DeckResponse
 
-    suspend fun returnCardToDeck(cardCode: String, deckId: String): DeckResponse
+    suspend fun returnCardToDeck(deckId: String, cardCode: String): DeckResponse
 
     suspend fun addToPile(pileName: String, deckId: String, cardCode: String): PileResponse
 

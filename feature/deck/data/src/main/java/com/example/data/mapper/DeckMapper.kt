@@ -1,11 +1,22 @@
 package com.example.data.mapper
 
 import com.example.data.model.CardData
+import com.example.data.model.DeckResponse
 import com.example.data.model.PileData
 import com.example.data.model.PileResponse
 import com.example.domain.model.Card
 import com.example.domain.model.Deck
 import com.example.domain.model.Pile
+
+fun DeckResponse.toDeck(): Deck {
+    return Deck(
+        remainingCards = this.remainingCards,
+        piles = listOf(Pile(
+            remainingCards = this.cards?.size ?: 0,
+            cards = this.cards?.map { it.toCard() } ?: listOf()
+        ))
+    )
+}
 
 fun PileResponse.toDeck(): Deck {
     val remainingCards =

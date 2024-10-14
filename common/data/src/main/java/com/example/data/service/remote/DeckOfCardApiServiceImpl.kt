@@ -52,7 +52,7 @@ class DeckOfCardApiServiceImpl(
         return request.body<DeckResponse>()
     }
 
-    override suspend fun returnCardToDeck(cardCode: String, deckId: String): DeckResponse {
+    override suspend fun returnCardToDeck(deckId: String, cardCode: String): DeckResponse {
         val url = BASE_URL.plus(deckId).plus(PILE).plus(HAND).plus(RETURN)
         val request = httpClient.get(url) {
             parameter(CARDS, cardCode)
