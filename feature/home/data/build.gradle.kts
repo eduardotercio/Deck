@@ -37,14 +37,7 @@ dependencies {
 
     implementation(project(":common:data"))
     implementation(project(":common:domain"))
-    implementation(project(":feature:deck:domain"))
-
-    // Tests
-    testImplementation(libs.koin.test)
-    testImplementation(libs.kotlin.coroutines.test)
-    testImplementation(libs.mockK.test)
-    testImplementation(libs.okhttp3.test)
-    testImplementation(libs.turbine.test)
+    implementation(project(":feature:home:domain"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

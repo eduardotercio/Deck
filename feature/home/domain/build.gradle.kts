@@ -1,10 +1,11 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 android {
-    namespace = "com.example.home"
+    namespace = "com.example.domain"
     compileSdk = 34
 
     defaultConfig {
@@ -33,6 +34,8 @@ android {
 }
 
 dependencies {
+
+    implementation(project(":common:domain"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
