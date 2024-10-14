@@ -14,6 +14,9 @@ data class DeckResponse(
     @SerialName("shuffled")
     val isShuffled: Boolean? = null,
 
+    @SerialName("cards")
+    val cards: List<CardData>? = null,
+
     @SerialName("remaining")
     val remainingCards: Int,
 )

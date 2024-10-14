@@ -12,7 +12,7 @@ data class CardData(
     val image: String,
 
     @SerialName("images")
-    val imagePathTypes: List<ImagePathType>,
+    val imagePathTypes: ImagePathType,
 
     @SerialName("value")
     val value: String,
