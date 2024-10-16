@@ -6,6 +6,7 @@ import com.example.data.service.local.SharedPreferencesServiceImpl
 import com.example.data.service.remote.DeckOfCardApiService
 import com.example.data.service.remote.DeckOfCardApiServiceImpl
 import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
@@ -20,7 +21,7 @@ private const val PREFERENCES_NAME = "preferences"
 
 val commonDataModule = module {
     single {
-        HttpClient {
+        HttpClient(CIO.create()) {
             install(ContentNegotiation) {
                 json(Json {
                     prettyPrint = true
