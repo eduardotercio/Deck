@@ -3,6 +3,8 @@ package com.example.data.repository
 import android.util.Log
 import com.example.data.mapper.toDeck
 import com.example.data.service.remote.DeckOfCardApiService
+import com.example.data.util.Const.HAND
+import com.example.data.util.Const.TRASH
 import com.example.domain.model.Deck
 import com.example.domain.repository.DeckRepository
 import kotlinx.coroutines.Dispatchers
@@ -18,23 +20,23 @@ class DeckRepositoryImpl(
 
                 Result.success(pileResponse.toDeck())
             }.getOrElse { exception ->
-                Log.e("DeckRepository: ", exception.message.toString())
+                Log.e(ERROR_TAG, exception.message.toString())
                 Result.failure(exception)
             }
         }
     }
 
-    override suspend fun drawCardFromDeck(deckId: String, pileName: String): Result<Deck> {
+    override suspend fun drawCardFromDeck(deckId: String): Result<Deck> {
         return withContext(Dispatchers.IO) {
             runCatching {
                 val drawnCardResponse = serviceApi.drawCardFromDeck(deckId)
                 val cardCode =
                     drawnCardResponse.cards?.first().let { it?.value.plus(it?.suit) }
-                val pileResponse = serviceApi.addToPile(pileName, deckId, cardCode)
+                val pileResponse = serviceApi.addToPile(HAND, deckId, cardCode)
 
                 Result.success(pileResponse.toDeck())
             }.getOrElse { exception ->
-                Log.e("DeckRepository: ", exception.message.toString())
+                Log.e(ERROR_TAG, exception.message.toString())
                 Result.failure(exception)
             }
         }
@@ -43,17 +45,17 @@ class DeckRepositoryImpl(
     override suspend fun drawCardFromTrash(deckId: String): Result<Deck> {
         return withContext(Dispatchers.IO) {
             runCatching {
-                val drawnCardResponse = serviceApi.drawCardFromPile(deckId, "lixeira")
+                val drawnCardResponse = serviceApi.drawCardFromPile(deckId, TRASH)
                 val cardCode =
-                    drawnCardResponse.piles.filter { it.key == "lixeira" }.map { it.value }
+                    drawnCardResponse.piles.filter { it.key == TRASH }.map { it.value }
                         .first().cards?.first().let {
                             it?.value.plus(it?.suit)
                         }
-                val pileResponse = serviceApi.addToPile("lixeira", deckId, cardCode)
+                val pileResponse = serviceApi.addToPile(TRASH, deckId, cardCode)
 
                 Result.success(pileResponse.toDeck())
             }.getOrElse { exception ->
-                Log.e("DeckRepository: ", exception.message.toString())
+                Log.e(ERROR_TAG, exception.message.toString())
                 Result.failure(exception)
             }
         }
@@ -62,11 +64,11 @@ class DeckRepositoryImpl(
     override suspend fun returnCardToDeck(deckId: String, cardCode: String): Result<Deck> {
         return withContext(Dispatchers.IO) {
             runCatching {
-                val response = serviceApi.returnCardToDeck(deckId, cardCode)
+                val response = serviceApi.returnCardToDeck(deckId, HAND, cardCode)
 
                 Result.success(response.toDeck())
             }.getOrElse { exception ->
-                Log.e("DeckRepository: ", exception.message.toString())
+                Log.e(ERROR_TAG, exception.message.toString())
                 Result.failure(exception)
             }
         }
@@ -75,11 +77,11 @@ class DeckRepositoryImpl(
     override suspend fun moveCardToTrash(deckId: String, cardCode: String): Result<Deck> {
         return withContext(Dispatchers.IO) {
             runCatching {
-                val response = serviceApi.addToPile("lixeira", deckId, cardCode)
+                val response = serviceApi.addToPile(TRASH, deckId, cardCode)
 
                 Result.success(response.toDeck())
             }.getOrElse { exception ->
-                Log.e("DeckRepository: ", exception.message.toString())
+                Log.e(ERROR_TAG, exception.message.toString())
                 Result.failure(exception)
             }
         }
@@ -92,7 +94,7 @@ class DeckRepositoryImpl(
 
                 Result.success(response.toDeck())
             }.getOrElse { exception ->
-                Log.e("DeckRepository: ", exception.message.toString())
+                Log.e(ERROR_TAG, exception.message.toString())
                 Result.failure(exception)
             }
         }
@@ -105,9 +107,13 @@ class DeckRepositoryImpl(
 
                 Result.success(response.toDeck())
             }.getOrElse { exception ->
-                Log.e("DeckRepository: ", exception.message.toString())
+                Log.e(ERROR_TAG, exception.message.toString())
                 Result.failure(exception)
             }
         }
+    }
+
+    private companion object {
+        const val ERROR_TAG = "DeckRepository: "
     }
 }

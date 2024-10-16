@@ -44,12 +44,12 @@ class DeckOfCardApiServiceImpl(
         return request.body<DeckResponse>()
     }
 
-    override suspend fun returnCardToDeck(deckId: String, cardCode: String): DeckResponse {
-        val url = "$BASE_URL/$deckId/pile/hand/return/"
+    override suspend fun returnCardToDeck(deckId: String, pileName: String, cardCode: String): PileResponse {
+        val url = "$BASE_URL/$deckId/pile/$pileName/return/"
         val request = httpClient.get(url) {
             parameter(CARDS, cardCode)
         }
-        return request.body<DeckResponse>()
+        return request.body<PileResponse>()
     }
 
     override suspend fun addToPile(

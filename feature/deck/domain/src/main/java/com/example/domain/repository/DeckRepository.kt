@@ -6,7 +6,7 @@ interface DeckRepository {
 
     suspend fun getPiles(deckId: String, pileName: String): Result<Deck>
 
-    suspend fun drawCardFromDeck(deckId: String, pileName: String): Result<Deck>
+    suspend fun drawCardFromDeck(deckId: String): Result<Deck>
 
     suspend fun drawCardFromTrash(deckId: String): Result<Deck>
 

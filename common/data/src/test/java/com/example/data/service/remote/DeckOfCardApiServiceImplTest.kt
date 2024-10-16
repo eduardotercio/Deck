@@ -2,7 +2,7 @@ package com.example.data.service.remote
 
 import com.example.data.util.Const.DECK_ID
 import com.example.data.util.Const.DEFAULT_URL_PATH
-import com.example.data.util.Const.PILE_ID
+import com.example.data.util.Const.PILE_NAME
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
@@ -15,13 +15,14 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import org.junit.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class DeckOfCardApiServiceImplTest {
 
     @Test
     fun `when call getNewDeck then should bring a unshuffled deck`() = runTest {
         val expectedShuffle = false
-        val expectedSuccess = true
+        val expectedIsSuccess = true
         val client = getClient(
             encodedPath = "$DEFAULT_URL_PATH/new/",
             expectedJson = """{"success": true, "deck_id": "$DECK_ID", "remaining": 52, "shuffled": false}"""
@@ -31,7 +32,7 @@ class DeckOfCardApiServiceImplTest {
 
         val response = service.getNewDeck()
 
-        assertEquals(expectedSuccess, response.isSuccess)
+        assertEquals(expectedIsSuccess, response.isSuccess)
         assertEquals(expectedShuffle, response.isShuffled)
 
         client.close()
@@ -41,45 +42,137 @@ class DeckOfCardApiServiceImplTest {
     fun `given a deckId and pileName with KD and 3H cards, when call getPiles then should bring deck info and the pile cards`() =
         runTest {
             val expectedPileCards = 2
-            val expectedSuccess = true
+            val expectedIsSuccess = true
             val client = getClient(
-                encodedPath = "$DEFAULT_URL_PATH/$DECK_ID/pile/$PILE_ID/list/",
-                expectedJson = """{"success": true, "deck_id": "$DECK_ID", "remaining": 50, "piles": {"$PILE_ID": {"remaining": 2, "cards": [{"code": "KD", "image": "https://deckofcardsapi.com/static/img/KD.png", "images": {"svg": "https://deckofcardsapi.com/static/img/KD.svg", "png": "https://deckofcardsapi.com/static/img/KD.png"}, "value": "KING", "suit": "DIAMONDS"}, {"code": "3H", "image": "https://deckofcardsapi.com/static/img/3H.png", "images": {"svg": "https://deckofcardsapi.com/static/img/3H.svg", "png": "https://deckofcardsapi.com/static/img/3H.png"}, "value": "3", "suit": "HEARTS"}]}}}"""
+                encodedPath = "$DEFAULT_URL_PATH/$DECK_ID/pile/$PILE_NAME/list/",
+                expectedJson = """{"success": true, "deck_id": "$DECK_ID", "remaining": 50, "piles": {"$PILE_NAME": {"remaining": 2, "cards": [{"code": "KD", "image": "https://deckofcardsapi.com/static/img/KD.png", "images": {"svg": "https://deckofcardsapi.com/static/img/KD.svg", "png": "https://deckofcardsapi.com/static/img/KD.png"}, "value": "KING", "suit": "DIAMONDS"}, {"code": "3H", "image": "https://deckofcardsapi.com/static/img/3H.png", "images": {"svg": "https://deckofcardsapi.com/static/img/3H.svg", "png": "https://deckofcardsapi.com/static/img/3H.png"}, "value": "3", "suit": "HEARTS"}]}}}"""
             )
 
             val service = DeckOfCardApiServiceImpl(client)
 
-            val response = service.getPiles(DECK_ID, PILE_ID)
+            val response = service.getPiles(DECK_ID, PILE_NAME)
 
-            assertEquals(expectedSuccess, response.isSuccess)
-            assertEquals(expectedPileCards, response.piles[PILE_ID]?.cards?.size)
+            assertEquals(expectedIsSuccess, response.isSuccess)
+            assertEquals(expectedPileCards, response.piles[PILE_NAME]?.cards?.size)
 
             client.close()
         }
 
     @Test
-    fun drawCardFromDeck() = runTest {
+    fun `Given a deckId When call drawCardFromDeck Then it should return a valid card`() = runTest {
+        val expectedCardCode = "AC"
+        val expectedIsSuccess = true
+        val client = getClient(
+            encodedPath = "$DEFAULT_URL_PATH/$DECK_ID/draw/",
+            expectedJson = """{"success": true, "deck_id": "$DECK_ID", "cards": [{"code": "AC", "image": "https://deckofcardsapi.com/static/img/AC.png", "images": {"svg": "https://deckofcardsapi.com/static/img/AC.svg", "png": "https://deckofcardsapi.com/static/img/AC.png"}, "value": "ACE", "suit": "CLUBS"}], "remaining": 51}"""
+        )
+        val service = DeckOfCardApiServiceImpl(client)
+
+        val response = service.drawCardFromDeck(DECK_ID)
+
+        assertEquals(expectedIsSuccess, response.isSuccess)
+        assertEquals(expectedCardCode, response.cards?.first { it.code == expectedCardCode }?.code)
+
+        client.close()
     }
 
     @Test
-    fun shuffleDeck() = runTest {
+    fun `When call shuffleDeck Then shuffle should be true`() = runTest {
+        val expectedIsSuccess = true
+        val expectedIsShuffled = true
+        val client = getClient(
+            encodedPath = "$DEFAULT_URL_PATH/$DECK_ID/shuffle/",
+            expectedJson = """{"success": true, "deck_id": "u7s8sr4usyz2", "remaining": 46, "shuffled": true}"""
+        )
+        val service = DeckOfCardApiServiceImpl(client)
+
+        val response = service.shuffleDeck(DECK_ID)
+
+        assertEquals(expectedIsSuccess, response.isSuccess)
+        assertEquals(expectedIsShuffled, response.isShuffled)
+
+        client.close()
     }
 
     @Test
-    fun returnCardToDeck() = runTest {
-    }
+    fun `Given a deckId and an card When call returnCardToDeck from a pile with one card Then should remain zero cards`() =
+        runTest {
+            val expectedIsSuccess = true
+            val expectedPileRemainingCards = 0
+            val cardCode = "KD"
+            val client = getClient(
+                encodedPath = "$DEFAULT_URL_PATH/$DECK_ID/pile/$PILE_NAME/return/",
+                expectedJson = """{"success": true, "deck_id": "$DECK_ID", "remaining": 51, "piles": {"$PILE_NAME": {"remaining": 0}}}"""
+            )
+            val service = DeckOfCardApiServiceImpl(client)
+
+            val response = service.returnCardToDeck(DECK_ID, PILE_NAME, cardCode)
+
+            assertEquals(expectedIsSuccess, response.isSuccess)
+            assertEquals(expectedPileRemainingCards, response.piles[PILE_NAME]?.remainingCards)
+
+            client.close()
+        }
 
     @Test
-    fun addToPile() = runTest {
-    }
+    fun `given a cardCode to an emptyPile when call addToPile then should return the pile with at least one card remaining`() =
+        runTest {
+            val expectedIsSuccess = true
+            val expectedPileRemainingCards = 1
+            val cardCode = "0S"
+            val client = getClient(
+                encodedPath = "$DEFAULT_URL_PATH/$DECK_ID/pile/$PILE_NAME/add/",
+                expectedJson = """{"success": true, "deck_id": "$DECK_ID", "remaining": 51, "piles": {"$PILE_NAME": {"remaining": 1}}}"""
+            )
+            val service = DeckOfCardApiServiceImpl(client)
+
+            val response = service.addToPile(PILE_NAME, DECK_ID, cardCode)
+
+            assertEquals(expectedIsSuccess, response.isSuccess)
+            assertEquals(expectedPileRemainingCards, response.piles[PILE_NAME]?.remainingCards)
+
+            client.close()
+        }
 
     @Test
-    fun shufflePile() = runTest {
-    }
+    fun `When call shufflePile Then should return the list of piles containing the pile`() =
+        runTest {
+            val expectedIsSuccess = true
+            val client = getClient(
+                encodedPath = "$DEFAULT_URL_PATH/$DECK_ID/pile/$PILE_NAME/shuffle/",
+                expectedJson = """{"success": true, "deck_id": "$DECK_ID", "remaining": 46, "piles": {"$PILE_NAME": {"remaining": 2}}}"""
+            )
+            val service = DeckOfCardApiServiceImpl(client)
+
+            val response = service.shufflePile(PILE_NAME, DECK_ID)
+
+            assertEquals(expectedIsSuccess, response.isSuccess)
+            assertTrue(response.piles.keys.contains(PILE_NAME))
+
+            client.close()
+        }
 
     @Test
-    fun drawCardFromPile() = runTest {
-    }
+    fun `given a pileName and deckId when call drawCardFromPile then it should return a card in the field cards`() =
+        runTest {
+            val expectedCardCode = "3H"
+            val expectedIsSuccess = true
+            val client = getClient(
+                encodedPath = "$DEFAULT_URL_PATH/$DECK_ID/pile/$PILE_NAME/draw/",
+                expectedJson = """{"success": true, "deck_id": "$DECK_ID", "cards": [{"code": "3H", "image": "https://deckofcardsapi.com/static/img/3H.png", "images": {"svg": "https://deckofcardsapi.com/static/img/3H.svg", "png": "https://deckofcardsapi.com/static/img/3H.png"}, "value": "3", "suit": "HEARTS"}], "piles": {"$PILE_NAME": {"remaining": 0}}}"""
+            )
+            val service = DeckOfCardApiServiceImpl(client)
+
+            val response = service.drawCardFromPile(PILE_NAME, DECK_ID)
+
+            assertEquals(expectedIsSuccess, response.isSuccess)
+            assertEquals(
+                expectedCardCode,
+                response.cards?.first { it.code == expectedCardCode }?.code
+            )
+
+            client.close()
+        }
 
     private fun getClient(encodedPath: String, expectedJson: String): HttpClient {
         val mockEngine = MockEngine { request ->
