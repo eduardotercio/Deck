@@ -9,6 +9,7 @@ import com.example.data.model.PileResponse
 object Mocks {
     const val DECK_ID = "deckIdTest"
     const val PILE_NAME = "pileNameTest"
+    const val PILE_NAME2 = "pileNameTest2"
 
     val card1 = CardData(
         code = "3D",
@@ -37,7 +38,7 @@ object Mocks {
     val shuffledDeck = DeckResponse(
         isSuccess = true,
         deckId = DECK_ID,
-        isShuffled = null,
+        isShuffled = true,
         cards = null,
         remainingCards = 52
     )
@@ -90,6 +91,14 @@ object Mocks {
         remainingCards = null,
         cards = listOf(card1),
         piles = mapOf(Pair(PILE_NAME, pileWithCard))
+    )
+
+    val pileResponseWith2Piles = PileResponse(
+        isSuccess = true,
+        deckId = DECK_ID,
+        remainingCards = null,
+        cards = listOf(card1),
+        piles = mapOf(Pair(PILE_NAME, emptyPile), Pair(PILE_NAME2, pileWithCard))
     )
 
 }
