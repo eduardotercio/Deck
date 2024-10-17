@@ -8,4 +8,6 @@ interface HomeRepository {
 
     suspend fun getNewDeck(): Result<Deck>
 
+    suspend fun deleteDeck(deckId:String): Result<Unit>
+
 }

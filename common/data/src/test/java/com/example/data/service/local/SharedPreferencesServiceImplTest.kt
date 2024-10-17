@@ -6,6 +6,7 @@ import androidx.test.core.app.ApplicationProvider
 import com.example.data.util.Mocks.DECK_ID
 import com.example.data.util.Mocks.DECK_ID2
 import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -23,6 +24,11 @@ class SharedPreferencesServiceImplTest {
         val context = ApplicationProvider.getApplicationContext<Context>()
         sharedPreferences = context.getSharedPreferences("test_prefs", Context.MODE_PRIVATE)
         sharedPreferencesService = SharedPreferencesServiceImpl(sharedPreferences)
+    }
+
+    @After
+    fun tearDown() {
+        sharedPreferences.edit().clear()
     }
 
 

@@ -27,14 +27,6 @@ object Mocks {
         suit = "DIAMONDS"
     )
 
-    val defaultDeck = DeckResponse(
-        isSuccess = true,
-        deckId = DECK_ID,
-        isShuffled = false,
-        cards = listOf(),
-        remainingCards = 52
-    )
-
     val shuffledDeck = DeckResponse(
         isSuccess = true,
         deckId = DECK_ID,
