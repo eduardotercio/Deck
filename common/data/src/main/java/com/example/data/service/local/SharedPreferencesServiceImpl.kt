@@ -16,8 +16,17 @@ class SharedPreferencesServiceImpl(
     }
 
     override suspend fun saveDeckId(deckId: String) {
+        val newDeckId = "$deckId/"
         val stringIds = getDeckIdsString()
-        val newValue = stringIds.plus(deckId).plus(DIVIDER)
+        val newValue = stringIds.plus(newDeckId)
+
+        sharedPreferences.edit().putString(KEY_DECK_IDS, newValue).apply()
+    }
+
+    override suspend fun deleteDeckId(deckId: String) {
+        val newDeckId = "$deckId/"
+        val stringIds = getDeckIdsString()
+        val newValue = stringIds.replace(newDeckId, EMPTY)
 
         sharedPreferences.edit().putString(KEY_DECK_IDS, newValue).apply()
     }

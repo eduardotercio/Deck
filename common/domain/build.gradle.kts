@@ -49,11 +49,11 @@ dependencies {
     api(libs.kotlinx.serialization.json)
 
     // Tests
-    api(libs.koin.test)
-    api(libs.kotlin.coroutines.test)
-    api(libs.mockK.test)
-    api(libs.ktor.test)
-    api(libs.turbine.test)
+    testImplementation(libs.koin.test)
+    testImplementation(libs.kotlin.coroutines.test)
+    testImplementation(libs.mockK.test)
+    testImplementation(libs.ktor.test)
+    testImplementation(libs.turbine.test)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
