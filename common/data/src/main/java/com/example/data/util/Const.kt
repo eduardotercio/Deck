@@ -8,8 +8,4 @@ object Const {
     const val REMAINING = "remaining"
     const val CARDS = "cards"
     const val COUNT = "count"
-
-    // Pile Names
-    const val HAND = "hand"
-    const val TRASH = "Trash"
 }

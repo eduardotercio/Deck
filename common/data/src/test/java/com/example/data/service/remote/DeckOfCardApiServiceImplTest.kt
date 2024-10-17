@@ -1,8 +1,8 @@
 package com.example.data.service.remote
 
-import com.example.data.util.Const.DECK_ID
-import com.example.data.util.Const.DEFAULT_URL_PATH
-import com.example.data.util.Const.PILE_NAME
+import com.example.data.util.Mocks.DECK_ID
+import com.example.data.util.Mocks.DEFAULT_URL_PATH
+import com.example.data.util.Mocks.PILE_NAME
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
@@ -20,7 +20,7 @@ import kotlin.test.assertTrue
 class DeckOfCardApiServiceImplTest {
 
     @Test
-    fun `when call getNewDeck then should bring a unshuffled deck`() = runTest {
+    fun `When call getNewDeck Then should bring a unshuffled deck`() = runTest {
         val expectedShuffle = false
         val expectedIsSuccess = true
         val client = getClient(
@@ -39,7 +39,7 @@ class DeckOfCardApiServiceImplTest {
     }
 
     @Test
-    fun `given a deckId and pileName with KD and 3H cards, when call getPiles then should bring deck info and the pile cards`() =
+    fun `Given a deckId and pileName with KD and 3H cards, When call getPiles Then should bring deck info and the pile cards`() =
         runTest {
             val expectedPileCards = 2
             val expectedIsSuccess = true
@@ -115,7 +115,7 @@ class DeckOfCardApiServiceImplTest {
         }
 
     @Test
-    fun `given a cardCode to an emptyPile when call addToPile then should return the pile with at least one card remaining`() =
+    fun `Given a cardCode to an emptyPile When call addToPile Then should return the pile with at least one card remaining`() =
         runTest {
             val expectedIsSuccess = true
             val expectedPileRemainingCards = 1
@@ -153,7 +153,7 @@ class DeckOfCardApiServiceImplTest {
         }
 
     @Test
-    fun `given a pileName and deckId when call drawCardFromPile then it should return a card in the field cards`() =
+    fun `Given a pileName and deckId When call drawCardFromPile Then it should return a card in the field cards`() =
         runTest {
             val expectedCardCode = "3H"
             val expectedIsSuccess = true

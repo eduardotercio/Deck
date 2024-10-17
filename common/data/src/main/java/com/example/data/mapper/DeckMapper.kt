@@ -40,7 +40,7 @@ fun CardData.toCard(): Card {
     return Card(
         code = this.code,
         image = image,
-        value = this.code,
+        value = this.value,
         suit = this.suit
     )
 }

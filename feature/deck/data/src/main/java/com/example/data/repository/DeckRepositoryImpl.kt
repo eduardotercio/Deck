@@ -3,8 +3,6 @@ package com.example.data.repository
 import android.util.Log
 import com.example.data.mapper.toDeck
 import com.example.data.service.remote.DeckOfCardApiService
-import com.example.data.util.Const.HAND
-import com.example.data.util.Const.TRASH
 import com.example.domain.model.Deck
 import com.example.domain.repository.DeckRepository
 import kotlinx.coroutines.Dispatchers
@@ -26,13 +24,27 @@ class DeckRepositoryImpl(
         }
     }
 
-    override suspend fun drawCardFromDeck(deckId: String): Result<Deck> {
+    override suspend fun drawCardFromDeck(deckId: String, pileName: String): Result<Deck> {
         return withContext(Dispatchers.IO) {
             runCatching {
                 val drawnCardResponse = serviceApi.drawCardFromDeck(deckId)
-                val cardCode =
-                    drawnCardResponse.cards?.first().let { it?.value.plus(it?.suit) }
-                val pileResponse = serviceApi.addToPile(HAND, deckId, cardCode)
+                val cardCode = drawnCardResponse.cards?.first()?.code ?: EMPTY_CODE
+                val pileResponse = serviceApi.addToPile(pileName, deckId, cardCode)
+
+                Result.success(pileResponse.toDeck())
+            }.getOrElse { exception ->
+//                Log.e(ERROR_TAG, exception.message.toString())
+                Result.failure(exception)
+            }
+        }
+    }
+
+    override suspend fun drawCardFromPile(deckId: String, pileName: String): Result<Deck> {
+        return withContext(Dispatchers.IO) {
+            runCatching {
+                val drawnCardResponse = serviceApi.drawCardFromPile(pileName, deckId)
+                val cardCode = drawnCardResponse.cards?.first()?.code ?: EMPTY_CODE
+                val pileResponse = serviceApi.addToPile(pileName, deckId, cardCode)
 
                 Result.success(pileResponse.toDeck())
             }.getOrElse { exception ->
@@ -42,29 +54,14 @@ class DeckRepositoryImpl(
         }
     }
 
-    override suspend fun drawCardFromTrash(deckId: String): Result<Deck> {
+    override suspend fun returnCardToDeck(
+        deckId: String,
+        pileName: String,
+        cardCode: String
+    ): Result<Deck> {
         return withContext(Dispatchers.IO) {
             runCatching {
-                val drawnCardResponse = serviceApi.drawCardFromPile(deckId, TRASH)
-                val cardCode =
-                    drawnCardResponse.piles.filter { it.key == TRASH }.map { it.value }
-                        .first().cards?.first().let {
-                            it?.value.plus(it?.suit)
-                        }
-                val pileResponse = serviceApi.addToPile(TRASH, deckId, cardCode)
-
-                Result.success(pileResponse.toDeck())
-            }.getOrElse { exception ->
-                Log.e(ERROR_TAG, exception.message.toString())
-                Result.failure(exception)
-            }
-        }
-    }
-
-    override suspend fun returnCardToDeck(deckId: String, cardCode: String): Result<Deck> {
-        return withContext(Dispatchers.IO) {
-            runCatching {
-                val response = serviceApi.returnCardToDeck(deckId, HAND, cardCode)
+                val response = serviceApi.returnCardToDeck(deckId, pileName, cardCode)
 
                 Result.success(response.toDeck())
             }.getOrElse { exception ->
@@ -74,10 +71,14 @@ class DeckRepositoryImpl(
         }
     }
 
-    override suspend fun moveCardToTrash(deckId: String, cardCode: String): Result<Deck> {
+    override suspend fun moveCardToPile(
+        pileName: String,
+        deckId: String,
+        cardCode: String
+    ): Result<Deck> {
         return withContext(Dispatchers.IO) {
             runCatching {
-                val response = serviceApi.addToPile(TRASH, deckId, cardCode)
+                val response = serviceApi.addToPile(pileName, deckId, cardCode)
 
                 Result.success(response.toDeck())
             }.getOrElse { exception ->
@@ -115,5 +116,6 @@ class DeckRepositoryImpl(
 
     private companion object {
         const val ERROR_TAG = "DeckRepository: "
+        const val EMPTY_CODE = ""
     }
 }
