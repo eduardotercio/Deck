@@ -30,8 +30,22 @@ class HomeRepositoryImpl(
         return withContext(Dispatchers.IO) {
             runCatching {
                 val response = serviceApi.getNewDeck()
+                servicePreferences.saveDeckId(response.deckId)
 
                 Result.success(response.toDeck())
+            }.getOrElse {
+                Log.e("HomeRepository: ", it.message.toString())
+                Result.failure(it)
+            }
+        }
+    }
+
+    override suspend fun deleteDeck(deckId: String): Result<Unit> {
+        return withContext(Dispatchers.IO) {
+            runCatching {
+                servicePreferences.deleteDeckId(deckId)
+
+                Result.success(Unit)
             }.getOrElse {
                 Log.e("HomeRepository: ", it.message.toString())
                 Result.failure(it)

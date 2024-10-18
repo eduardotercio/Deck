@@ -43,7 +43,7 @@ dependencies {
     testImplementation(libs.koin.test)
     testImplementation(libs.kotlin.coroutines.test)
     testImplementation(libs.mockK.test)
-    testImplementation(libs.okhttp3.test)
+    testImplementation(libs.ktor.test)
     testImplementation(libs.turbine.test)
 
     implementation(libs.androidx.core.ktx)
