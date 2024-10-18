@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.designsystem"
+    namespace = "com.example.common.designsystem"
     compileSdk = 34
 
     defaultConfig {
