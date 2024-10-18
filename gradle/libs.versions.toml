@@ -23,8 +23,10 @@ serialization = "1.6.3"
 nav-version = "2.8.2"
 coil = "2.7.0"
 mockK = "1.13.2"
-okhttp3 = "4.9.3"
+ktor-test = "2.3.11"
 turbine = "0.12.1"
+robolectric = "4.10"
+core-ktx-test = "1.6.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -73,11 +75,13 @@ navigation-compose = { module = "androidx.navigation:navigation-compose", versio
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines-core" }
 
 # tests
+ktor-test = { module = "io.ktor:ktor-client-mock", version.ref = "ktor-test" }
 koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin" }
 kotlin-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines-core" }
 mockK-test = { module = "io.mockk:mockk", version.ref = "mockK" }
-okhttp3-test = { module = "com.squareup.okhttp3:mockwebserver", version.ref = "okhttp3" }
 turbine-test = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
+robolectric-test = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+core-ktx-test = { group = "androidx.test", name = "core-ktx", version.ref = "core-ktx-test" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

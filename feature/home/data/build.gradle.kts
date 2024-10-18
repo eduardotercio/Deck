@@ -1,9 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.kotlinx.serialization)
-    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -37,13 +35,9 @@ android {
 
 dependencies {
 
+    implementation(project(":common:data"))
     implementation(project(":common:domain"))
-
-    // ktor
-    implementation(libs.ktor.client)
-    implementation(libs.ktor.cio)
-    implementation(libs.ktor.client.content.negotiation)
-    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(project(":feature:home:domain"))
 
     // Tests
     testImplementation(libs.koin.test)
@@ -51,8 +45,6 @@ dependencies {
     testImplementation(libs.mockK.test)
     testImplementation(libs.ktor.test)
     testImplementation(libs.turbine.test)
-    testImplementation(libs.robolectric.test)
-    testImplementation(libs.core.ktx.test)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

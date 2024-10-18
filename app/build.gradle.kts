@@ -56,8 +56,12 @@ dependencies {
 
     implementation(project(":common:designsystem"))
     implementation(project(":common:data"))
+    implementation(project(":common:domain"))
     implementation(project(":common:presentation"))
-    implementation(project(":feature:deck"))
+    implementation(project(":feature:deck:data"))
+    implementation(project(":feature:deck:domain"))
+    implementation(project(":feature:home:data"))
+    implementation(project(":feature:home:domain"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
