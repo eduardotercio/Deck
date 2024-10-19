@@ -33,7 +33,7 @@ class DeckRepositoryImpl(
 
                 Result.success(pileResponse.toDeck())
             }.getOrElse { exception ->
-//                Log.e(ERROR_TAG, exception.message.toString())
+                Log.e(ERROR_TAG, exception.message.toString())
                 Result.failure(exception)
             }
         }
