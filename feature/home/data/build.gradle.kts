@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.data"
+    namespace = "com.example.feature.home.data"
     compileSdk = 34
 
     defaultConfig {

@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.domain"
+    namespace = "com.example.feature.deck.domain"
     compileSdk = 34
 
     defaultConfig {
@@ -36,6 +36,13 @@ android {
 dependencies {
 
     implementation(project(":common:domain"))
+
+    // Tests
+    testImplementation(libs.koin.test)
+    testImplementation(libs.kotlin.coroutines.test)
+    testImplementation(libs.mockK.test)
+    testImplementation(libs.ktor.test)
+    testImplementation(libs.turbine.test)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.domain"
+    namespace = "com.example.common.domain"
     compileSdk = 34
 
     defaultConfig {
@@ -54,11 +54,11 @@ dependencies {
     testImplementation(libs.mockK.test)
     testImplementation(libs.ktor.test)
     testImplementation(libs.turbine.test)
+    testImplementation(libs.junit)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
