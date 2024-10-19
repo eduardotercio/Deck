@@ -10,20 +10,23 @@ import com.example.common.domain.model.Pile
 
 fun DeckResponse.toDeck(): Deck {
     return Deck(
+        deckId = this.deckId,
         remainingCards = this.remainingCards,
-        piles = listOf(Pile(
-            remainingCards = this.cards?.size ?: 0,
-            cards = this.cards?.map { it.toCard() } ?: listOf()
-        ))
+        piles = mapOf()
     )
 }
 
 fun PileResponse.toDeck(): Deck {
     val remainingCards =
-        this.remainingCards ?: (com.example.common.data.mapper.MAX_CARDS - this.piles.map { it.value.remainingCards }.sum())
+        this.remainingCards
+            ?: (MAX_CARDS - this.piles.map { it.value.remainingCards }
+                .sum())
     return Deck(
+        deckId = this.deckId,
         remainingCards = remainingCards,
-        piles = this.piles.map { it.value.toPile() }
+        piles = this.piles.mapValues { (_, value) ->
+            value.toPile()
+        }
     )
 }
 

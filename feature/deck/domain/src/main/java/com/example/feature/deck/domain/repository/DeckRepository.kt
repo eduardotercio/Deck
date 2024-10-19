@@ -4,7 +4,7 @@ import com.example.common.domain.model.Deck
 
 interface DeckRepository {
 
-    suspend fun getPiles(deckId: String, pileName: String): Result<Deck>
+    suspend fun getPile(deckId: String, pileName: String): Result<Deck>
 
     suspend fun drawCardFromDeck(deckId: String, pileName: String): Result<Deck>
 

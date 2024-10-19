@@ -35,7 +35,7 @@ android {
 
 dependencies {
 
-    implementation(project(":common:domain"))
+    api(project(":common:domain"))
 
     // Tests
     testImplementation(libs.koin.test)

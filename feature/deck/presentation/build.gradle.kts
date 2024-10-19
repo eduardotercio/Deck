@@ -1,11 +1,10 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.kotlinx.serialization)
 }
 
 android {
-    namespace = "com.example.feature.deck.data"
+    namespace = "com.example.feature.deck.presentation"
     compileSdk = 34
 
     defaultConfig {
@@ -34,16 +33,8 @@ android {
 }
 
 dependencies {
-
-    implementation(project(":common:data"))
+    implementation(project(":common:presentation"))
     implementation(project(":feature:deck:domain"))
-
-    // Tests
-    testImplementation(libs.koin.test)
-    testImplementation(libs.kotlin.coroutines.test)
-    testImplementation(libs.mockK.test)
-    testImplementation(libs.ktor.test)
-    testImplementation(libs.turbine.test)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

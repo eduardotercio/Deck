@@ -41,7 +41,7 @@ class DeckRepositoryImplTest {
             val expectedResponse = pileResponseWithEmptyPile
             coEvery { serviceApi.getPiles(deckId, pileName) } returns expectedResponse
 
-            val actualResponse = repository.getPiles(deckId, pileName)
+            val actualResponse = repository.getPile(deckId, pileName)
 
             assertTrue(actualResponse.isSuccess)
             assertEquals(expectedResponse.toDeck(), actualResponse.getOrNull())

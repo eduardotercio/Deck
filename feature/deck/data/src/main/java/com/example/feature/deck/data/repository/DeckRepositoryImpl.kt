@@ -11,7 +11,7 @@ import kotlinx.coroutines.withContext
 class DeckRepositoryImpl(
     private val serviceApi: DeckOfCardApiService
 ) : DeckRepository {
-    override suspend fun getPiles(deckId: String, pileName: String): Result<Deck> {
+    override suspend fun getPile(deckId: String, pileName: String): Result<Deck> {
         return withContext(Dispatchers.IO) {
             runCatching {
                 val pileResponse = serviceApi.getPiles(deckId, pileName)
