@@ -37,6 +37,8 @@ android {
 
 dependencies {
 
+    api(project(":common:designsystem"))
+
     // Lifecycle
     api(libs.lifecycle.viewmodel)
     api(libs.lifecycle.viewmodel.compose)
