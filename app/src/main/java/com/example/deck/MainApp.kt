@@ -5,6 +5,7 @@ import com.example.common.data.di.commonDataModule
 import com.example.feature.deck.data.di.featureDeckDataModule
 import com.example.feature.deck.domain.di.featureDeckDomainModule
 import com.example.feature.home.data.di.featureHomeDataModule
+import com.example.feature.home.domain.di.featureHomeDomainModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -20,6 +21,7 @@ class MainApp : Application() {
                 featureDeckDataModule,
                 featureDeckDomainModule,
                 featureHomeDataModule,
+                featureHomeDomainModule
             )
         }
     }

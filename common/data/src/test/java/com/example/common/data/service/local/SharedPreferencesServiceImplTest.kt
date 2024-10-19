@@ -3,8 +3,6 @@ package com.example.common.data.service.local
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.test.core.app.ApplicationProvider
-import com.example.common.data.service.local.SharedPreferencesService
-import com.example.common.data.service.local.SharedPreferencesServiceImpl
 import com.example.common.data.util.Mocks.DECK_ID
 import com.example.common.data.util.Mocks.DECK_ID2
 import kotlinx.coroutines.test.runTest
