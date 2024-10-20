@@ -1,4 +1,4 @@
-package com.example.hqsmarvel.presentation.navigation
+package com.example.deck.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController

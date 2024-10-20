@@ -1,4 +1,4 @@
-package com.example.deck
+package com.example.deck.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

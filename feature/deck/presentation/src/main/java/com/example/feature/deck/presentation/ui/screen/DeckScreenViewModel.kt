@@ -21,7 +21,7 @@ internal class DeckScreenViewModel(
         viewModelScope.launch {
             when (event) {
                 is DeckScreenContract.Event.FetchDeck -> {
-                    fetchPile(event.deckId)
+                    fetchDeck(event.deckId)
                 }
 
                 is DeckScreenContract.Event.DrawCardToHand -> {
@@ -51,7 +51,7 @@ internal class DeckScreenViewModel(
         }
     }
 
-    private suspend fun fetchPile(deckId: String) {
+    private suspend fun fetchDeck(deckId: String) {
         val result = getPileUseCase(deckId, HAND_PILE)
         if (result.isSuccess) {
             setState {

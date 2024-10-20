@@ -24,7 +24,8 @@ object Const {
     )
 
     val defaultDeck = Deck(
+        deckId = DECK_ID,
         remainingCards = 52,
-        piles = listOf(defaultPile)
+        piles = mapOf(Pair(PILE_NAME, defaultPile))
     )
 }

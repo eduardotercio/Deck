@@ -5,7 +5,6 @@ import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.rememberNavController
 import com.example.common.designsystem.theme.DeckTheme
-import com.example.hqsmarvel.presentation.navigation.NavGraph
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
