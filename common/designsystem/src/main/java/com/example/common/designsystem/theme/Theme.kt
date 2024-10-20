@@ -33,13 +33,13 @@ private val LocalDesignSystemThemeColors = staticCompositionLocalOf {
 }
 
 val designSystemThemePalette = DeckColors(
-    primaryColor = Color(0xFF181818),
+    primaryColor = Color(0xFF80DA35),
     onPrimaryColor = Color(0xFFD9D9D9),
-    backgroundColor = Color(0xFF000000),
+    backgroundColor = Color(0xFF33A14B),
     onBackgroundColor = Color(0xFFFFFFFF),
-    surfaceColor = Color(0xFF1E1E1E),
-    onSurfaceColor = Color(0xFFD9D9D9),
-    textPrimary = Color(0xFFFFFFFF),
+    surfaceColor = Color(0xFF60886C),
+    onSurfaceColor = Color(0xFFFFFFFF),
+    textPrimary = Color(0xFF33A14B),
     textSecondary = Color(0xFFA8A8A8)
 )
 

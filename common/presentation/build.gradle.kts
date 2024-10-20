@@ -38,6 +38,7 @@ android {
 dependencies {
 
     api(project(":common:designsystem"))
+    implementation(project(":common:domain"))
 
     // Lifecycle
     api(libs.lifecycle.viewmodel)
@@ -51,6 +52,7 @@ dependencies {
     api(libs.navigation.compose)
     api(libs.material.compose)
 
+    api(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

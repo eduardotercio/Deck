@@ -1,4 +1,4 @@
-package com.example.feature.deck.presentation.screen
+package com.example.feature.deck.presentation.ui.screen
 
 import androidx.lifecycle.viewModelScope
 import com.example.common.presentation.base.BaseViewModel
@@ -8,7 +8,7 @@ import com.example.feature.deck.domain.usecase.MoveCardUseCase
 import com.example.feature.deck.domain.usecase.ShuffleCardsUseCase
 import kotlinx.coroutines.launch
 
-class DeckScreenViewModel(
+internal class DeckScreenViewModel(
     private val getPileUseCase: GetPileUseCase,
     private val moveCardUseCase: MoveCardUseCase,
     private val shuffleCardsUseCase: ShuffleCardsUseCase
@@ -16,15 +16,14 @@ class DeckScreenViewModel(
     BaseViewModel<DeckScreenContract.Event, DeckScreenContract.State, DeckScreenContract.Effect>() {
     override fun setInitialState() = DeckScreenContract.State()
 
-    init {
-        viewModelScope.launch {
-            fetchPile()
-        }
-    }
 
     override fun handleEvents(event: DeckScreenContract.Event) {
         viewModelScope.launch {
             when (event) {
+                is DeckScreenContract.Event.FetchDeck -> {
+                    fetchPile(event.deckId)
+                }
+
                 is DeckScreenContract.Event.DrawCardToHand -> {
                     drawCardToHand()
                 }
@@ -52,20 +51,19 @@ class DeckScreenViewModel(
         }
     }
 
-    private suspend fun fetchPile() {
-        val deckId = currentState.deck.deckId
+    private suspend fun fetchPile(deckId: String) {
         val result = getPileUseCase(deckId, HAND_PILE)
         if (result.isSuccess) {
             setState {
                 copy(
-                    loading = false,
+                    isLoading = false,
                     deck = result.getOrNull() ?: currentState.deck
                 )
             }
         } else {
             setState {
                 copy(
-                    loading = false,
+                    isLoading = false,
                 )
             }
         }
@@ -199,7 +197,7 @@ class DeckScreenViewModel(
         }
     }
 
-    private companion object {
+    companion object {
         const val HAND_PILE = "hand"
         const val TRASH_PILE = "trash"
 

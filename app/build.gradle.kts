@@ -60,6 +60,7 @@ dependencies {
     implementation(project(":common:presentation"))
     implementation(project(":feature:deck:data"))
     implementation(project(":feature:deck:domain"))
+    implementation(project(":feature:deck:presentation"))
     implementation(project(":feature:home:data"))
     implementation(project(":feature:home:domain"))
 
@@ -69,7 +70,6 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
