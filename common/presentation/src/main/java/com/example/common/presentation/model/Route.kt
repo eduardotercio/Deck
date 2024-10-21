@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 sealed class Route {
 
     @Serializable
-    data object Home : Route()
+    object Home : Route()
 
     @Serializable
     data class Deck(

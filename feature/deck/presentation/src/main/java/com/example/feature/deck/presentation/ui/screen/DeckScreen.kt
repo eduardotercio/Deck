@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
@@ -24,16 +26,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
 import com.example.common.designsystem.R
+import com.example.common.designsystem.dimens.Dimens.defaultAlt
+import com.example.common.designsystem.dimens.Dimens.medium
+import com.example.common.designsystem.dimens.Dimens.small
 import com.example.common.designsystem.dimens.responsiveDp
 import com.example.common.designsystem.theme.DeckTheme
 import com.example.common.designsystem.theme.backgroundGradientColor
 import com.example.common.domain.model.Deck
+import com.example.common.presentation.components.ImageCard
 import com.example.feature.deck.presentation.ui.component.ActionButton
 import com.example.feature.deck.presentation.ui.screen.DeckScreenViewModel.Companion.HAND_PILE
 import com.example.feature.deck.presentation.ui.screen.DeckScreenViewModel.Companion.TRASH_PILE
@@ -67,7 +70,7 @@ internal fun DeckScreenContent(
     onEvent: (DeckScreenContract.Event) -> Unit
 ) {
     val backCard = R.drawable.back_card_example
-    val frontCard = deck.piles[HAND_PILE]?.cards?.last()?.image
+    val frontCard = deck.piles[HAND_PILE]?.cards?.last()?.image ?: ""
 
     var isFlipped by remember { mutableStateOf(false) }
     var isMovedToPile by remember { mutableStateOf(false) }
@@ -85,38 +88,43 @@ internal fun DeckScreenContent(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(brush = backgroundGradientColor),
+            .background(brush = backgroundGradientColor)
+            .padding(top = defaultAlt),
     ) {
         if (isLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         } else {
-            Row(
-                modifier = Modifier
+            Box(
+                Modifier
+                    .size(150.dp.responsiveDp())
                     .align(Alignment.TopCenter),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+                contentAlignment = Alignment.Center,
             ) {
-                AsyncImage(
-                    model = rememberAsyncImagePainter(backCard),
-                    contentDescription = "Back of card",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxSize()
+                ImageCard(
+                    image = backCard, contentDescription = "Back of card", modifier = Modifier
+                        .align(Alignment.TopCenter)
                 )
-                Column {
-                    ActionButton(
-                        iconId = R.drawable.shuffle,
-                        onClick = { onEvent(DeckScreenContract.Event.ShuffleDeck) }
-                    )
-                    ActionButton(
-                        iconId = R.drawable.get_card,
-                        onClick = {
-                            onEvent(DeckScreenContract.Event.DrawCardToHand)
-                            isFlipped = !isFlipped
-                            isMovedToPile = !isMovedToPile
-                        }
-                    )
-                }
+            }
+            Spacer(modifier = Modifier.width(small))
+            Column(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(start = 150.dp.responsiveDp(), top = medium),
+                verticalArrangement = Arrangement.Center
+            ) {
+                ActionButton(
+                    iconId = R.drawable.shuffle,
+                    onClick = { onEvent(DeckScreenContract.Event.ShuffleDeck) }
+                )
+                Spacer(modifier = Modifier.height(small))
+                ActionButton(
+                    iconId = R.drawable.get_card,
+                    onClick = {
+                        onEvent(DeckScreenContract.Event.DrawCardToHand)
+                        isFlipped = !isFlipped
+                        isMovedToPile = !isMovedToPile
+                    }
+                )
             }
             Box(
                 Modifier
@@ -127,28 +135,19 @@ internal fun DeckScreenContent(
                         cameraDistance = 12f * density
                     }
                     .align(Alignment.TopCenter),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 if (cardRotationY <= 90f) {
-                    AsyncImage(
-                        model = rememberAsyncImagePainter(backCard),
-                        contentDescription = "Back of card",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize()
-                    )
+                    ImageCard(image = backCard, contentDescription = "Back of card")
                 } else {
-                    AsyncImage(
-                        model = rememberAsyncImagePainter(frontCard),
-                        contentDescription = "Front of card",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize()
-                    )
+                    ImageCard(image = frontCard, contentDescription = "Front of card")
                 }
             }
 
             Row(
                 modifier = Modifier
-                    .align(Alignment.CenterEnd),
+                    .align(Alignment.CenterEnd)
+                    .padding(end = defaultAlt),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -157,19 +156,14 @@ internal fun DeckScreenContent(
                         iconId = R.drawable.shuffle,
                         onClick = { onEvent(DeckScreenContract.Event.ShufflePile(TRASH_PILE)) }
                     )
+                    Spacer(modifier = Modifier.height(small))
                     ActionButton(
                         iconId = R.drawable.resource_return,
                         onClick = { onEvent(DeckScreenContract.Event.ReturnCardToHand) }
                     )
                 }
-                AsyncImage(
-                    model = rememberAsyncImagePainter(backCard),
-                    contentDescription = "Back of card",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(color = DeckTheme.colors.surfaceColor)
-                )
+                Spacer(modifier = Modifier.width(small))
+                ImageCard(image = backCard, contentDescription = "Back of card")
             }
 
             Spacer(modifier = Modifier.height(100.dp))
@@ -177,32 +171,36 @@ internal fun DeckScreenContent(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(DeckTheme.colors.surfaceColor)
+                    .align(Alignment.BottomCenter),
+                horizontalAlignment = Alignment.End
             ) {
-                Row {
+                Row(modifier = Modifier.padding(end = defaultAlt)) {
                     ActionButton(
                         iconId = R.drawable.shuffle,
                         onClick = { onEvent(DeckScreenContract.Event.ShufflePile(HAND_PILE)) }
                     )
+                    Spacer(modifier = Modifier.width(small))
                     ActionButton(
                         iconId = R.drawable.resource_return,
                         onClick = { onEvent(DeckScreenContract.Event.ReturnCardToHand) }
                     )
+                    Spacer(modifier = Modifier.width(small))
                     ActionButton(
                         iconId = R.drawable.trash,
                         onClick = { onEvent(DeckScreenContract.Event.MoveCardToTrash) }
                     )
                 }
-                LazyRow {
+                Spacer(modifier = Modifier.height(small))
+                LazyRow(
+                    modifier = Modifier
+                        .height(150.dp.responsiveDp())
+                        .fillMaxWidth()
+                        .background(DeckTheme.colors.surfaceColor)
+                ) {
                     items(
                         items = deck.piles[HAND_PILE]?.cards ?: listOf()
                     ) {
-                        AsyncImage(
-                            model = rememberAsyncImagePainter(it.image),
-                            contentDescription = "Front of card",
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier.fillMaxSize()
-                        )
+                        ImageCard(image = it.image, contentDescription = "Front of card")
                     }
                 }
             }

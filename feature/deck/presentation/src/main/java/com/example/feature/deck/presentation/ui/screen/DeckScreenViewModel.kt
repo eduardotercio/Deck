@@ -1,6 +1,7 @@
 package com.example.feature.deck.presentation.ui.screen
 
 import androidx.lifecycle.viewModelScope
+import com.example.common.domain.model.RequestState
 import com.example.common.presentation.base.BaseViewModel
 import com.example.feature.deck.domain.model.CardLocation
 import com.example.feature.deck.domain.usecase.GetPileUseCase
@@ -53,18 +54,22 @@ internal class DeckScreenViewModel(
 
     private suspend fun fetchDeck(deckId: String) {
         val result = getPileUseCase(deckId, HAND_PILE)
-        if (result.isSuccess) {
-            setState {
-                copy(
-                    isLoading = false,
-                    deck = result.getOrNull() ?: currentState.deck
-                )
+        when (result) {
+            is RequestState.Success -> {
+                setState {
+                    copy(
+                        isLoading = false,
+                        deck = result.data
+                    )
+                }
             }
-        } else {
-            setState {
-                copy(
-                    isLoading = false,
-                )
+
+            is RequestState.Error -> {
+                setState {
+                    copy(
+                        isLoading = false,
+                    )
+                }
             }
         }
     }
@@ -77,10 +82,10 @@ internal class DeckScreenViewModel(
             deckId = deckId,
             pileName = HAND_PILE
         )
-        if (result.isSuccess) {
+        if (result is RequestState.Success) {
             setState {
                 copy(
-                    deck = result.getOrNull() ?: currentState.deck
+                    deck = result.data
                 )
             }
         } else {
@@ -101,10 +106,10 @@ internal class DeckScreenViewModel(
             pileName = HAND_PILE,
             cardCode = cardCode
         )
-        if (result.isSuccess) {
+        if (result is RequestState.Success) {
             setState {
                 copy(
-                    deck = result.getOrNull() ?: currentState.deck
+                    deck = result.data
                 )
             }
         } else {
@@ -125,10 +130,10 @@ internal class DeckScreenViewModel(
             pileName = TRASH_PILE,
             cardCode = cardCode
         )
-        if (result.isSuccess) {
+        if (result is RequestState.Success) {
             setState {
                 copy(
-                    deck = result.getOrNull() ?: currentState.deck
+                    deck = result.data
                 )
             }
         } else {
@@ -147,10 +152,10 @@ internal class DeckScreenViewModel(
             deckId = deckId,
             pileName = HAND_PILE
         )
-        if (result.isSuccess) {
+        if (result is RequestState.Success) {
             setState {
                 copy(
-                    deck = result.getOrNull() ?: currentState.deck
+                    deck = result.data
                 )
             }
         } else {
@@ -165,10 +170,10 @@ internal class DeckScreenViewModel(
         val deckId = currentState.deck.deckId
 
         val result = shuffleCardsUseCase(deckId = deckId)
-        if (result.isSuccess) {
+        if (result is RequestState.Success) {
             setState {
                 copy(
-                    deck = result.getOrNull() ?: currentState.deck
+                    deck = result.data
                 )
             }
         } else {
@@ -183,10 +188,10 @@ internal class DeckScreenViewModel(
         val deckId = currentState.deck.deckId
 
         val result = shuffleCardsUseCase(deckId = deckId, pileName = pileName)
-        if (result.isSuccess) {
+        if (result is RequestState.Success) {
             setState {
                 copy(
-                    deck = result.getOrNull() ?: currentState.deck
+                    deck = result.data
                 )
             }
         } else {
