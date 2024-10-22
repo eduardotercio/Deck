@@ -22,6 +22,7 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -29,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -49,7 +51,6 @@ import com.example.feature.deck.presentation.ui.screen.DeckScreenViewModel.Compa
 import com.example.feature.deck.presentation.ui.screen.DeckScreenViewModel.Companion.TRASH_PILE
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
 
 @Composable
 internal fun DeckScreen(
@@ -133,32 +134,62 @@ internal fun DeckScreenContent(
     isCardToDeck: Boolean,
     isCardToTrash: Boolean,
 ) {
-    val scope = rememberCoroutineScope()
     val density = LocalDensity.current
     val handCards = deck.piles[HAND_PILE]?.cards ?: listOf()
     val backCard = R.drawable.back_card_example
+    val endOffSetX = (LocalConfiguration.current.screenWidthDp - 260).toFloat()
+    val startOffSetX = (endOffSetX - 140) / 2
 
-    var isAnimating by remember { mutableStateOf(false) }
     var animatedCard by remember { mutableStateOf<Card?>(null) }
+    var isAnimating by remember { mutableStateOf(false) }
+
+    var rotationTargetValue by remember { mutableFloatStateOf(0f) }
+    var offSetYTargetValue by remember { mutableFloatStateOf(0f) }
+    var offSetXTargetValue by remember { mutableFloatStateOf(0f) }
 
     val cardRotation by animateFloatAsState(
-        targetValue = if (isAnimating) 180f else 0f,
+        targetValue = rotationTargetValue,
         animationSpec = tween(durationMillis = 800)
     )
     val cardOffsetY by animateFloatAsState(
-        targetValue = if (isAnimating) 500f else 0f,
-        animationSpec = tween(durationMillis = 1500)
+        targetValue = offSetYTargetValue,
+        animationSpec = tween(durationMillis = 1000)
+    )
+    val cardOffsetX by animateFloatAsState(
+        targetValue = offSetXTargetValue,
+        animationSpec = tween(durationMillis = 1000)
     )
     LaunchedEffect(deck) {
         if (!isAnimating && deck.remainingCards > 0 && isCardFromDeck) {
             animatedCard = handCards.last()
-            isAnimating = true
 
-            scope.launch {
-                delay(1500)
-                isAnimating = false
-            }
+            offSetXTargetValue = startOffSetX
+            offSetYTargetValue = 500f
+            rotationTargetValue = 180f
+            isAnimating = true
         }
+        if (handCards.isNotEmpty() && isCardToDeck) {
+            offSetXTargetValue = startOffSetX
+            offSetYTargetValue = 0f
+            rotationTargetValue = 0f
+            isAnimating = true
+        }
+        if (handCards.isNotEmpty() && isCardFromTrash) {
+            animatedCard = handCards.last()
+
+            offSetXTargetValue = startOffSetX
+            offSetYTargetValue = 500f
+            rotationTargetValue = 180f
+            isAnimating = true
+        }
+        if (handCards.isNotEmpty() && isCardToTrash) {
+            offSetXTargetValue = endOffSetX
+            offSetYTargetValue = 340f
+            rotationTargetValue = 0f
+            isAnimating = true
+        }
+        delay(1500)
+        isAnimating = false
     }
 
     Box(
@@ -195,6 +226,9 @@ internal fun DeckScreenContent(
                 ActionButton(
                     iconId = R.drawable.get_card,
                     onClick = {
+                        offSetXTargetValue = startOffSetX
+                        offSetYTargetValue = 0f
+                        rotationTargetValue = 0f
                         onEvent(DeckScreenContract.Event.DrawCardToHand)
                     },
                 )
@@ -215,7 +249,12 @@ internal fun DeckScreenContent(
                     Spacer(modifier = Modifier.height(small))
                     ActionButton(
                         iconId = R.drawable.resource_return,
-                        onClick = { onEvent(DeckScreenContract.Event.ReturnCardToHand) },
+                        onClick = {
+                            offSetXTargetValue = endOffSetX
+                            offSetYTargetValue = 340f
+                            rotationTargetValue = 0f
+                            onEvent(DeckScreenContract.Event.ReturnCardToHand)
+                        },
                     )
                 }
                 Spacer(modifier = Modifier.width(small))
@@ -237,15 +276,23 @@ internal fun DeckScreenContent(
                     ActionButton(
                         iconId = R.drawable.resource_return,
                         onClick = {
-                            if (handCards.isNotEmpty()) {
-                                onEvent(DeckScreenContract.Event.ReturnCardToDeck)
-                            }
+                            animatedCard = handCards.last()
+                            offSetXTargetValue = startOffSetX
+                            offSetYTargetValue = 500f
+                            rotationTargetValue = 180f
+                            onEvent(DeckScreenContract.Event.ReturnCardToDeck)
                         },
                     )
                     Spacer(modifier = Modifier.width(small))
                     ActionButton(
                         iconId = R.drawable.trash,
-                        onClick = { onEvent(DeckScreenContract.Event.MoveCardToTrash) },
+                        onClick = {
+                            animatedCard = handCards.first()
+                            offSetXTargetValue = startOffSetX
+                            offSetYTargetValue = 500f
+                            rotationTargetValue = 180f
+                            onEvent(DeckScreenContract.Event.MoveCardToTrash)
+                        },
                     )
                 }
                 Spacer(modifier = Modifier.height(small))
@@ -271,19 +318,22 @@ internal fun DeckScreenContent(
                 Box(
                     Modifier
                         .size(150.dp.responsiveDp())
-                        .offset(y = cardOffsetY.dp)
+                        .offset(y = cardOffsetY.dp, x = cardOffsetX.dp)
                         .graphicsLayer {
-                            rotationY = cardRotation
-                            cameraDistance = 12f * density.density // Make 3D flip look natural
+                            val rotation =
+                                if (cardRotation <= 90f) cardRotation else 180f - cardRotation
+                            rotationY = rotation
+
+                            cameraDistance = 8 * density.density
                         }
                         .align(Alignment.TopCenter)
                         .animateContentSize(animationSpec = tween(800)),
                     contentAlignment = Alignment.Center,
                 ) {
-                    if (cardRotation > 90f) {
-                        ImageCard(image = animatedCard?.image, contentDescription = "Front of card")
-                    } else {
+                    if (cardRotation <= 90f) {
                         ImageCard(image = backCard, contentDescription = "Back of card")
+                    } else {
+                        ImageCard(image = animatedCard?.image, contentDescription = "Front of card")
                     }
                 }
             }
