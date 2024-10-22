@@ -1,12 +1,13 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.compose.compiler)
 }
 
 android {
-    namespace = "com.example.designsystem"
+    namespace = "com.example.common.designsystem"
     compileSdk = 34
 
     defaultConfig {
@@ -15,7 +16,9 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
-
+    buildFeatures {
+        compose = true
+    }
     buildTypes {
         release {
             isMinifyEnabled = false
