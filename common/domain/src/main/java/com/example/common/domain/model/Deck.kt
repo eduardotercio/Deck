@@ -4,7 +4,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Deck(
+    val deckId: String,
+
     val remainingCards: Int,
 
-    val piles: List<Pile>
+    val piles: Map<String, Pile>
 )

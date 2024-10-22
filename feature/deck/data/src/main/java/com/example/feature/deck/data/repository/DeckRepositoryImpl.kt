@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.common.data.mapper.toDeck
 import com.example.common.data.service.remote.DeckOfCardApiService
 import com.example.common.domain.model.Deck
+import com.example.common.domain.model.RequestState
 import com.example.feature.deck.domain.repository.DeckRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -11,45 +12,55 @@ import kotlinx.coroutines.withContext
 class DeckRepositoryImpl(
     private val serviceApi: DeckOfCardApiService
 ) : DeckRepository {
-    override suspend fun getPiles(deckId: String, pileName: String): Result<Deck> {
+    override suspend fun getPile(deckId: String, pileName: String): RequestState<Deck> {
         return withContext(Dispatchers.IO) {
             runCatching {
                 val pileResponse = serviceApi.getPiles(deckId, pileName)
+                val deck = pileResponse.toDeck()
 
-                Result.success(pileResponse.toDeck())
+                RequestState.Success(deck)
             }.getOrElse { exception ->
-                Log.e(ERROR_TAG, exception.message.toString())
-                Result.failure(exception)
+                val errorMessage = exception.message.toString()
+                Log.e(ERROR_TAG, errorMessage)
+                RequestState.Error(errorMessage)
             }
         }
     }
 
-    override suspend fun drawCardFromDeck(deckId: String, pileName: String): Result<Deck> {
+    override suspend fun drawCardFromDeck(deckId: String, pileName: String): RequestState<Deck> {
         return withContext(Dispatchers.IO) {
             runCatching {
                 val drawnCardResponse = serviceApi.drawCardFromDeck(deckId)
                 val cardCode = drawnCardResponse.cards?.first()?.code ?: EMPTY_CODE
-                val pileResponse = serviceApi.addToPile(pileName, deckId, cardCode)
 
-                Result.success(pileResponse.toDeck())
+                serviceApi.addToPile(pileName, deckId, cardCode)
+
+                val pileResponse = serviceApi.getPiles(deckId, pileName)
+
+                RequestState.Success(pileResponse.toDeck())
             }.getOrElse { exception ->
-                Log.e(ERROR_TAG, exception.message.toString())
-                Result.failure(exception)
+                val errorMessage = exception.message.toString()
+                Log.e(ERROR_TAG, errorMessage)
+                RequestState.Error(errorMessage)
             }
         }
     }
 
-    override suspend fun drawCardFromPile(deckId: String, pileName: String): Result<Deck> {
+    override suspend fun drawCardFromPile(deckId: String, pileName: String): RequestState<Deck> {
         return withContext(Dispatchers.IO) {
             runCatching {
                 val drawnCardResponse = serviceApi.drawCardFromPile(pileName, deckId)
                 val cardCode = drawnCardResponse.cards?.first()?.code ?: EMPTY_CODE
-                val pileResponse = serviceApi.addToPile(pileName, deckId, cardCode)
 
-                Result.success(pileResponse.toDeck())
+                serviceApi.addToPile(HAND_PILE, deckId, cardCode)
+
+                val pileResponse = serviceApi.getPiles(deckId, pileName)
+
+                RequestState.Success(pileResponse.toDeck())
             }.getOrElse { exception ->
-                Log.e(ERROR_TAG, exception.message.toString())
-                Result.failure(exception)
+                val errorMessage = exception.message.toString()
+                Log.e(ERROR_TAG, errorMessage)
+                RequestState.Error(errorMessage)
             }
         }
     }
@@ -58,15 +69,17 @@ class DeckRepositoryImpl(
         deckId: String,
         pileName: String,
         cardCode: String
-    ): Result<Deck> {
+    ): RequestState<Deck> {
         return withContext(Dispatchers.IO) {
             runCatching {
-                val response = serviceApi.returnCardToDeck(deckId, pileName, cardCode)
+                serviceApi.returnCardToDeck(deckId, pileName, cardCode)
+                val response = serviceApi.getPiles(deckId, pileName)
 
-                Result.success(response.toDeck())
+                RequestState.Success(response.toDeck())
             }.getOrElse { exception ->
-                Log.e(ERROR_TAG, exception.message.toString())
-                Result.failure(exception)
+                val errorMessage = exception.message.toString()
+                Log.e(ERROR_TAG, errorMessage)
+                RequestState.Error(errorMessage)
             }
         }
     }
@@ -75,41 +88,45 @@ class DeckRepositoryImpl(
         pileName: String,
         deckId: String,
         cardCode: String
-    ): Result<Deck> {
+    ): RequestState<Deck> {
         return withContext(Dispatchers.IO) {
             runCatching {
-                val response = serviceApi.addToPile(pileName, deckId, cardCode)
+                serviceApi.addToPile(pileName, deckId, cardCode)
+                val response = serviceApi.getPiles(deckId, HAND_PILE)
 
-                Result.success(response.toDeck())
+                RequestState.Success(response.toDeck())
             }.getOrElse { exception ->
-                Log.e(ERROR_TAG, exception.message.toString())
-                Result.failure(exception)
+                val errorMessage = exception.message.toString()
+                Log.e(ERROR_TAG, errorMessage)
+                RequestState.Error(errorMessage)
             }
         }
     }
 
-    override suspend fun shuffleDeck(deckId: String): Result<Deck> {
+    override suspend fun shuffleDeck(deckId: String): RequestState<Deck> {
         return withContext(Dispatchers.IO) {
             runCatching {
                 val response = serviceApi.shuffleDeck(deckId)
 
-                Result.success(response.toDeck())
+                RequestState.Success(response.toDeck())
             }.getOrElse { exception ->
-                Log.e(ERROR_TAG, exception.message.toString())
-                Result.failure(exception)
+                val errorMessage = exception.message.toString()
+                Log.e(ERROR_TAG, errorMessage)
+                RequestState.Error(errorMessage)
             }
         }
     }
 
-    override suspend fun shufflePile(pileName: String, deckId: String): Result<Deck> {
+    override suspend fun shufflePile(pileName: String, deckId: String): RequestState<Deck> {
         return withContext(Dispatchers.IO) {
             runCatching {
                 val response = serviceApi.shufflePile(pileName, deckId)
 
-                Result.success(response.toDeck())
+                RequestState.Success(response.toDeck())
             }.getOrElse { exception ->
-                Log.e(ERROR_TAG, exception.message.toString())
-                Result.failure(exception)
+                val errorMessage = exception.message.toString()
+                Log.e(ERROR_TAG, errorMessage)
+                RequestState.Error(errorMessage)
             }
         }
     }
@@ -117,5 +134,6 @@ class DeckRepositoryImpl(
     private companion object {
         const val ERROR_TAG = "DeckRepository: "
         const val EMPTY_CODE = ""
+        const val HAND_PILE = "hand"
     }
 }

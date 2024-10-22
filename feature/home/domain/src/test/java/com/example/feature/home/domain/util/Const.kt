@@ -6,7 +6,8 @@ object Const {
     const val DECK_ID = "deckIdTest"
 
     val defaultDeck = Deck(
+        deckId = DECK_ID,
         remainingCards = 52,
-        piles = listOf()
+        piles = mapOf()
     )
 }

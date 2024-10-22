@@ -1,6 +1,7 @@
 package com.example.feature.deck.domain.usecase
 
 import com.example.common.domain.model.Deck
+import com.example.common.domain.model.RequestState
 import com.example.feature.deck.domain.model.CardLocation
 
 interface MoveCardUseCase {
@@ -11,5 +12,5 @@ interface MoveCardUseCase {
         deckId: String,
         pileName: String,
         cardCode: String = ""
-    ): Result<Deck>
+    ): RequestState<Deck>
 }

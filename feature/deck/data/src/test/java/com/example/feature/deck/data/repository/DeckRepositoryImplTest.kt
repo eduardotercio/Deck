@@ -2,7 +2,9 @@ package com.example.feature.deck.data.repository
 
 import com.example.common.data.mapper.toDeck
 import com.example.common.data.service.remote.DeckOfCardApiService
+import com.example.common.domain.model.RequestState
 import com.example.feature.deck.data.util.Mocks.DECK_ID
+import com.example.feature.deck.data.util.Mocks.HAND_PILE
 import com.example.feature.deck.data.util.Mocks.PILE_NAME
 import com.example.feature.deck.data.util.Mocks.card1
 import com.example.feature.deck.data.util.Mocks.deckWithCardDrawn
@@ -41,10 +43,10 @@ class DeckRepositoryImplTest {
             val expectedResponse = pileResponseWithEmptyPile
             coEvery { serviceApi.getPiles(deckId, pileName) } returns expectedResponse
 
-            val actualResponse = repository.getPiles(deckId, pileName)
+            val actualResponse = repository.getPile(deckId, pileName)
 
-            assertTrue(actualResponse.isSuccess)
-            assertEquals(expectedResponse.toDeck(), actualResponse.getOrNull())
+            assertTrue(actualResponse is RequestState.Success)
+            assertEquals(expectedResponse.toDeck(), actualResponse.data)
 
             coVerify { serviceApi.getPiles(deckId, pileName) }
         }
@@ -57,7 +59,7 @@ class DeckRepositoryImplTest {
             val cardCode = card1.code
 
             val drawCardExpectedResponse = deckWithCardDrawn
-            val addToPileExpectedResponse = pileResponseWithCardInPile
+            val expectedResponse = pileResponseWithCardInPile
             coEvery { serviceApi.drawCardFromDeck(deckId) } returns drawCardExpectedResponse
             coEvery {
                 serviceApi.addToPile(
@@ -65,15 +67,17 @@ class DeckRepositoryImplTest {
                     deckId,
                     cardCode
                 )
-            } returns addToPileExpectedResponse
+            } returns Unit
+            coEvery { serviceApi.getPiles(deckId, pileName) } returns expectedResponse
 
             val actualResponse = repository.drawCardFromDeck(deckId, pileName)
 
-            assertTrue(actualResponse.isSuccess)
-            assertEquals(addToPileExpectedResponse.toDeck(), actualResponse.getOrNull())
+            assertTrue(actualResponse is RequestState.Success)
+            assertEquals(expectedResponse.toDeck(), actualResponse.data)
 
             coVerify { serviceApi.drawCardFromDeck(deckId) }
             coVerify { serviceApi.addToPile(pileName, deckId, cardCode) }
+            coVerify { serviceApi.getPiles(deckId, pileName) }
         }
 
     @Test
@@ -84,7 +88,7 @@ class DeckRepositoryImplTest {
             val cardCode = card1.code
 
             val drawCardExpectedResponse = pileResponseDrawCard
-            val addToPileExpectedResponse = pileResponseWithCardInPile
+            val expectedResponse = pileResponseWithCardInPile
             coEvery {
                 serviceApi.drawCardFromPile(
                     pileName,
@@ -93,19 +97,21 @@ class DeckRepositoryImplTest {
             } returns drawCardExpectedResponse
             coEvery {
                 serviceApi.addToPile(
-                    pileName,
+                    HAND_PILE,
                     deckId,
                     cardCode
                 )
-            } returns addToPileExpectedResponse
+            } returns Unit
+            coEvery { serviceApi.getPiles(deckId, pileName) } returns expectedResponse
 
             val actualResponse = repository.drawCardFromPile(deckId, pileName)
 
-            assertTrue(actualResponse.isSuccess)
-            assertEquals(addToPileExpectedResponse.toDeck(), actualResponse.getOrNull())
+            assertTrue(actualResponse is RequestState.Success)
+            assertEquals(expectedResponse.toDeck(), actualResponse.data)
 
             coVerify { serviceApi.drawCardFromPile(pileName, deckId) }
-            coVerify { serviceApi.addToPile(pileName, deckId, cardCode) }
+            coVerify { serviceApi.addToPile(HAND_PILE, deckId, cardCode) }
+            coVerify { serviceApi.getPiles(deckId, pileName) }
         }
 
     @Test
@@ -122,14 +128,17 @@ class DeckRepositoryImplTest {
                     pileName,
                     cardCode
                 )
-            } returns expectedResponse
+            } returns Unit
+            coEvery { serviceApi.getPiles(deckId, pileName) } returns expectedResponse
+
 
             val actualResponse = repository.returnCardToDeck(deckId, pileName, cardCode)
 
-            assertTrue(actualResponse.isSuccess)
-            assertEquals(expectedResponse.toDeck(), actualResponse.getOrNull())
+            assertTrue(actualResponse is RequestState.Success)
+            assertEquals(expectedResponse.toDeck(), actualResponse.data)
 
             coVerify { serviceApi.returnCardToDeck(deckId, pileName, cardCode) }
+            coVerify { serviceApi.getPiles(deckId, pileName) }
         }
 
     @Test
@@ -146,14 +155,16 @@ class DeckRepositoryImplTest {
                     deckId,
                     cardCode
                 )
-            } returns expectedResponse
+            } returns Unit
+            coEvery { serviceApi.getPiles(deckId, HAND_PILE) } returns expectedResponse
 
             val actualResponse = repository.moveCardToPile(pileName, deckId, cardCode)
 
-            assertTrue(actualResponse.isSuccess)
-            assertEquals(expectedResponse.toDeck(), actualResponse.getOrNull())
+            assertTrue(actualResponse is RequestState.Success)
+            assertEquals(expectedResponse.toDeck(), actualResponse.data)
 
             coVerify { serviceApi.addToPile(pileName, deckId, cardCode) }
+            coVerify { serviceApi.getPiles(deckId, HAND_PILE) }
         }
 
     @Test
@@ -166,8 +177,8 @@ class DeckRepositoryImplTest {
 
             val actualResponse = repository.shuffleDeck(deckId)
 
-            assertTrue(actualResponse.isSuccess)
-            assertEquals(expectedResponse.toDeck(), actualResponse.getOrNull())
+            assertTrue(actualResponse is RequestState.Success)
+            assertEquals(expectedResponse.toDeck(), actualResponse.data)
 
             coVerify { serviceApi.shuffleDeck(deckId) }
         }
@@ -183,8 +194,8 @@ class DeckRepositoryImplTest {
 
             val actualResponse = repository.shufflePile(pileName, deckId)
 
-            assertTrue(actualResponse.isSuccess)
-            assertEquals(expectedResponse.toDeck(), actualResponse.getOrNull())
+            assertTrue(actualResponse is RequestState.Success)
+            assertEquals(expectedResponse.toDeck(), actualResponse.data)
 
             coVerify { serviceApi.shufflePile(pileName, deckId) }
         }

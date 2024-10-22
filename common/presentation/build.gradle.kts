@@ -1,8 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.compose.compiler)
 }
 
@@ -16,7 +16,9 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
-
+    buildFeatures {
+        compose = true
+    }
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -37,6 +39,9 @@ android {
 
 dependencies {
 
+    api(project(":common:designsystem"))
+    implementation(project(":common:domain"))
+
     // Lifecycle
     api(libs.lifecycle.viewmodel)
     api(libs.lifecycle.viewmodel.compose)
@@ -49,6 +54,7 @@ dependencies {
     api(libs.navigation.compose)
     api(libs.material.compose)
 
+    api(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

@@ -1,5 +1,6 @@
 package com.example.feature.home.domain.usecase
 
+import com.example.common.domain.model.RequestState
 import com.example.feature.home.domain.repository.HomeRepository
 import com.example.feature.home.domain.util.Const.DECK_ID
 import io.mockk.coEvery
@@ -18,7 +19,7 @@ class DeleteDeckUseCaseImplTest {
     fun `When call getNewDeck Then it should return a success list string`() = runTest {
         val deckId = DECK_ID
 
-        val expectedResponse = Result.success(Unit)
+        val expectedResponse = RequestState.Success(Unit)
         coEvery { repository.deleteDeck(deckId) } returns expectedResponse
 
         val response = useCase.invoke(deckId)

@@ -1,5 +1,6 @@
 package com.example.feature.home.domain.usecase
 
+import com.example.common.domain.model.RequestState
 import com.example.feature.home.domain.repository.HomeRepository
 import com.example.feature.home.domain.util.Const.DECK_ID
 import io.mockk.coEvery
@@ -17,7 +18,7 @@ class GetDeckIdsUseCaseImplTest {
     @Test
     fun `When call getDeckIds Then it should return a success list string`() = runTest {
 
-        val expectedResponse = Result.success(listOf(DECK_ID))
+        val expectedResponse = RequestState.Success(listOf(DECK_ID))
         coEvery { repository.getDeckIds() } returns expectedResponse
 
         val response = useCase.invoke()

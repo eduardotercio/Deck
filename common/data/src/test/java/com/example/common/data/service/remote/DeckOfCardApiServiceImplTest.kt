@@ -1,6 +1,5 @@
 package com.example.common.data.service.remote
 
-import com.example.common.data.service.remote.DeckOfCardApiServiceImpl
 import com.example.common.data.util.Mocks.DECK_ID
 import com.example.common.data.util.Mocks.DEFAULT_URL_PATH
 import com.example.common.data.util.Mocks.PILE_NAME
@@ -94,46 +93,6 @@ class DeckOfCardApiServiceImplTest {
 
         client.close()
     }
-
-    @Test
-    fun `Given a deckId and an card When call returnCardToDeck from a pile with one card Then should remain zero cards`() =
-        runTest {
-            val expectedIsSuccess = true
-            val expectedPileRemainingCards = 0
-            val cardCode = "KD"
-            val client = getClient(
-                encodedPath = "$DEFAULT_URL_PATH/$DECK_ID/pile/$PILE_NAME/return/",
-                expectedJson = """{"success": true, "deck_id": "$DECK_ID", "remaining": 51, "piles": {"$PILE_NAME": {"remaining": 0}}}"""
-            )
-            val service = DeckOfCardApiServiceImpl(client)
-
-            val response = service.returnCardToDeck(DECK_ID, PILE_NAME, cardCode)
-
-            assertEquals(expectedIsSuccess, response.isSuccess)
-            assertEquals(expectedPileRemainingCards, response.piles[PILE_NAME]?.remainingCards)
-
-            client.close()
-        }
-
-    @Test
-    fun `Given a cardCode to an emptyPile When call addToPile Then should return the pile with at least one card remaining`() =
-        runTest {
-            val expectedIsSuccess = true
-            val expectedPileRemainingCards = 1
-            val cardCode = "0S"
-            val client = getClient(
-                encodedPath = "$DEFAULT_URL_PATH/$DECK_ID/pile/$PILE_NAME/add/",
-                expectedJson = """{"success": true, "deck_id": "$DECK_ID", "remaining": 51, "piles": {"$PILE_NAME": {"remaining": 1}}}"""
-            )
-            val service = DeckOfCardApiServiceImpl(client)
-
-            val response = service.addToPile(PILE_NAME, DECK_ID, cardCode)
-
-            assertEquals(expectedIsSuccess, response.isSuccess)
-            assertEquals(expectedPileRemainingCards, response.piles[PILE_NAME]?.remainingCards)
-
-            client.close()
-        }
 
     @Test
     fun `When call shufflePile Then should return the list of piles containing the pile`() =

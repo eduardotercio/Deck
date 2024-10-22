@@ -1,8 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.compose.compiler)
 }
 
@@ -22,7 +22,9 @@ android {
             useSupportLibrary = true
         }
     }
-
+    buildFeatures {
+        compose = true
+    }
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -39,9 +41,7 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    buildFeatures {
-        compose = true
-    }
+
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
     }
@@ -53,16 +53,6 @@ android {
 }
 
 dependencies {
-
-    implementation(project(":common:designsystem"))
-    implementation(project(":common:data"))
-    implementation(project(":common:domain"))
-    implementation(project(":common:presentation"))
-    implementation(project(":feature:deck:data"))
-    implementation(project(":feature:deck:domain"))
-    implementation(project(":feature:home:data"))
-    implementation(project(":feature:home:domain"))
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -78,4 +68,14 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    implementation(project(":common:designsystem"))
+    implementation(project(":common:data"))
+    implementation(project(":common:domain"))
+    implementation(project(":common:presentation"))
+    implementation(project(":feature:deck:data"))
+    implementation(project(":feature:deck:domain"))
+    implementation(project(":feature:deck:presentation"))
+    implementation(project(":feature:home:data"))
+    implementation(project(":feature:home:domain"))
 }
