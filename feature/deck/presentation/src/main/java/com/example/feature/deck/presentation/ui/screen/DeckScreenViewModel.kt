@@ -58,7 +58,7 @@ internal class DeckScreenViewModel(
             is RequestState.Success -> {
                 setState {
                     copy(
-                        isLoading = false,
+                        isScreenLoading = false,
                         deck = result.data
                     )
                 }
@@ -67,7 +67,7 @@ internal class DeckScreenViewModel(
             is RequestState.Error -> {
                 setState {
                     copy(
-                        isLoading = false,
+                        isScreenLoading = false,
                     )
                 }
             }
@@ -82,23 +82,25 @@ internal class DeckScreenViewModel(
             deckId = deckId,
             pileName = HAND_PILE
         )
-        if (result is RequestState.Success) {
-            setState {
-                copy(
-                    deck = result.data
-                )
+        when (result) {
+            is RequestState.Success -> {
+                setEffect { DeckScreenContract.Effect.DrawCardToHand }
+                setState {
+                    copy(
+                        deck = result.data
+                    )
+                }
             }
-        } else {
-            setState {
-                copy(
-                )
+
+            is RequestState.Error -> {
+
             }
         }
     }
 
     private suspend fun returnCardToDeck() {
         val deckId = currentState.deck.deckId
-        val cardCode = currentState.deck.piles[HAND_PILE]?.cards?.first()?.code ?: EMPTY
+        val cardCode = currentState.deck.piles[HAND_PILE]?.cards?.last()?.code ?: EMPTY
         val result = moveCardUseCase(
             startLocation = CardLocation.HAND,
             endLocation = CardLocation.DECK,
@@ -106,16 +108,17 @@ internal class DeckScreenViewModel(
             pileName = HAND_PILE,
             cardCode = cardCode
         )
-        if (result is RequestState.Success) {
-            setState {
-                copy(
-                    deck = result.data
-                )
+        when (result) {
+            is RequestState.Success -> {
+                setEffect { DeckScreenContract.Effect.ReturnCardToDeck }
+                setState {
+                    copy(
+                        deck = result.data
+                    )
+                }
             }
-        } else {
-            setState {
-                copy(
-                )
+
+            is RequestState.Error -> {
             }
         }
     }
@@ -130,16 +133,21 @@ internal class DeckScreenViewModel(
             pileName = TRASH_PILE,
             cardCode = cardCode
         )
-        if (result is RequestState.Success) {
-            setState {
-                copy(
-                    deck = result.data
-                )
+        when (result) {
+            is RequestState.Success -> {
+                setEffect { DeckScreenContract.Effect.MoveCardToTrash }
+                setState {
+                    copy(
+                        deck = result.data
+                    )
+                }
             }
-        } else {
-            setState {
-                copy(
-                )
+
+            is RequestState.Error -> {
+                setState {
+                    copy(
+                    )
+                }
             }
         }
     }
@@ -150,18 +158,20 @@ internal class DeckScreenViewModel(
             startLocation = CardLocation.TRASH,
             endLocation = CardLocation.HAND,
             deckId = deckId,
-            pileName = HAND_PILE
+            pileName = TRASH_PILE
         )
-        if (result is RequestState.Success) {
-            setState {
-                copy(
-                    deck = result.data
-                )
+        when (result) {
+            is RequestState.Success -> {
+                setEffect { DeckScreenContract.Effect.ReturnCardToHand }
+                setState {
+                    copy(
+                        deck = result.data
+                    )
+                }
             }
-        } else {
-            setState {
-                copy(
-                )
+
+            is RequestState.Error -> {
+
             }
         }
     }
@@ -170,17 +180,17 @@ internal class DeckScreenViewModel(
         val deckId = currentState.deck.deckId
 
         val result = shuffleCardsUseCase(deckId = deckId)
-        if (result is RequestState.Success) {
-            setState {
-                copy(
-                    deck = result.data
-                )
+        when (result) {
+            is RequestState.Success -> {
+                setEffect { DeckScreenContract.Effect.ShuffleDeck }
+                setState {
+                    copy(
+                        deck = result.data
+                    )
+                }
             }
-        } else {
-            setState {
-                copy(
-                )
-            }
+
+            is RequestState.Error -> {}
         }
     }
 
@@ -188,17 +198,17 @@ internal class DeckScreenViewModel(
         val deckId = currentState.deck.deckId
 
         val result = shuffleCardsUseCase(deckId = deckId, pileName = pileName)
-        if (result is RequestState.Success) {
-            setState {
-                copy(
-                    deck = result.data
-                )
+        when (result) {
+            is RequestState.Success -> {
+                setEffect { DeckScreenContract.Effect.ShufflePile }
+                setState {
+                    copy(
+                        deck = result.data
+                    )
+                }
             }
-        } else {
-            setState {
-                copy(
-                )
-            }
+
+            is RequestState.Error -> {}
         }
     }
 

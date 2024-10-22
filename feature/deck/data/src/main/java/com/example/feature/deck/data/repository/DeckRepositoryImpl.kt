@@ -16,8 +16,11 @@ class DeckRepositoryImpl(
         return withContext(Dispatchers.IO) {
             runCatching {
                 val pileResponse = serviceApi.getPiles(deckId, pileName)
+                Log.i("pileResponse: ", "$pileResponse")
+                val deck = pileResponse.toDeck()
+                Log.i("pileResponse: ", "$deck")
 
-                RequestState.Success(pileResponse.toDeck())
+                RequestState.Success(deck)
             }.getOrElse { exception ->
                 val errorMessage = exception.message.toString()
                 Log.e(ERROR_TAG, errorMessage)
@@ -31,7 +34,10 @@ class DeckRepositoryImpl(
             runCatching {
                 val drawnCardResponse = serviceApi.drawCardFromDeck(deckId)
                 val cardCode = drawnCardResponse.cards?.first()?.code ?: EMPTY_CODE
-                val pileResponse = serviceApi.addToPile(pileName, deckId, cardCode)
+
+                serviceApi.addToPile(pileName, deckId, cardCode)
+
+                val pileResponse = serviceApi.getPiles(deckId, pileName)
 
                 RequestState.Success(pileResponse.toDeck())
             }.getOrElse { exception ->
@@ -47,7 +53,10 @@ class DeckRepositoryImpl(
             runCatching {
                 val drawnCardResponse = serviceApi.drawCardFromPile(pileName, deckId)
                 val cardCode = drawnCardResponse.cards?.first()?.code ?: EMPTY_CODE
-                val pileResponse = serviceApi.addToPile(pileName, deckId, cardCode)
+
+                serviceApi.addToPile(HAND_PILE, deckId, cardCode)
+
+                val pileResponse = serviceApi.getPiles(deckId, pileName)
 
                 RequestState.Success(pileResponse.toDeck())
             }.getOrElse { exception ->
@@ -65,7 +74,8 @@ class DeckRepositoryImpl(
     ): RequestState<Deck> {
         return withContext(Dispatchers.IO) {
             runCatching {
-                val response = serviceApi.returnCardToDeck(deckId, pileName, cardCode)
+                serviceApi.returnCardToDeck(deckId, pileName, cardCode)
+                val response = serviceApi.getPiles(deckId, pileName)
 
                 RequestState.Success(response.toDeck())
             }.getOrElse { exception ->
@@ -83,7 +93,8 @@ class DeckRepositoryImpl(
     ): RequestState<Deck> {
         return withContext(Dispatchers.IO) {
             runCatching {
-                val response = serviceApi.addToPile(pileName, deckId, cardCode)
+                serviceApi.addToPile(pileName, deckId, cardCode)
+                val response = serviceApi.getPiles(deckId, HAND_PILE)
 
                 RequestState.Success(response.toDeck())
             }.getOrElse { exception ->
@@ -125,5 +136,6 @@ class DeckRepositoryImpl(
     private companion object {
         const val ERROR_TAG = "DeckRepository: "
         const val EMPTY_CODE = ""
+        const val HAND_PILE = "hand"
     }
 }

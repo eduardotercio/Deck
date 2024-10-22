@@ -12,8 +12,6 @@ fun ImageCard(image: Any?, contentDescription: String?, modifier: Modifier = Mod
         contentDescription = contentDescription,
         contentScale = ContentScale.Crop,
         modifier = Modifier
-//            .height(76.dp.responsiveDp())
-//            .width(102.dp.responsiveDp())
             .then(modifier)
     )
 }

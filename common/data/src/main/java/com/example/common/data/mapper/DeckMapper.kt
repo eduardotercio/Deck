@@ -38,8 +38,7 @@ fun PileData.toPile(): Pile {
 }
 
 fun CardData.toCard(): Card {
-    val svgImage = this.imagePathTypes.svgPath
-    val image = svgImage.ifEmpty { this.image }
+    val image = this.image
     return Card(
         code = this.code,
         image = image,

@@ -22,11 +22,17 @@ internal object DeckScreenContract {
     }
 
     interface Effect : UiEffect {
-
+        data object DrawCardToHand : Effect
+        data object ReturnCardToDeck : Effect
+        data object MoveCardToTrash : Effect
+        data object ReturnCardToHand : Effect
+        data object ShuffleDeck : Effect
+        data object ShufflePile : Effect
     }
 
     data class State(
-        val isLoading: Boolean = true,
+        val isScreenLoading: Boolean = true,
+        val isHandPileLoading: Boolean = false,
         val deck: Deck = Deck(deckId = "", remainingCards = 0, piles = mapOf())
     ) : UiState
 }
