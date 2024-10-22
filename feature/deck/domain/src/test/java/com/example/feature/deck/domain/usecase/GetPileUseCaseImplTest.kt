@@ -1,5 +1,6 @@
 package com.example.feature.deck.domain.usecase
 
+import com.example.common.domain.model.RequestState
 import com.example.feature.deck.domain.repository.DeckRepository
 import com.example.feature.deck.domain.util.Const.DECK_ID
 import com.example.feature.deck.domain.util.Const.PILE_NAME
@@ -21,7 +22,7 @@ class GetPileUseCaseImplTest {
         val deckId = DECK_ID
         val pileName = PILE_NAME
 
-        val expectedResult = Result.success(defaultDeck)
+        val expectedResult = RequestState.Success(defaultDeck)
         coEvery { repository.getPile(deckId, pileName) } returns expectedResult
 
         val response = useCase.invoke(deckId, pileName)

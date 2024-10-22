@@ -10,6 +10,7 @@ object Mocks {
     const val DECK_ID = "deckIdTest"
     const val PILE_NAME = "pileNameTest"
     const val PILE_NAME2 = "pileNameTest2"
+    const val HAND_PILE = "hand"
 
     val card1 = CardData(
         code = "3D",

@@ -16,9 +16,7 @@ class DeckRepositoryImpl(
         return withContext(Dispatchers.IO) {
             runCatching {
                 val pileResponse = serviceApi.getPiles(deckId, pileName)
-                Log.i("pileResponse: ", "$pileResponse")
                 val deck = pileResponse.toDeck()
-                Log.i("pileResponse: ", "$deck")
 
                 RequestState.Success(deck)
             }.getOrElse { exception ->

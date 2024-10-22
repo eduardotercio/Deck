@@ -1,5 +1,6 @@
 package com.example.feature.deck.domain.usecase
 
+import com.example.common.domain.model.RequestState
 import com.example.feature.deck.domain.repository.DeckRepository
 import com.example.feature.deck.domain.util.Const.DECK_ID
 import com.example.feature.deck.domain.util.Const.PILE_NAME
@@ -20,7 +21,7 @@ class ShuffleCardsUseCaseImplTest {
     fun `Given a deckId When call shuffleDeck Then it should return Result success`() = runTest {
         val deckId = DECK_ID
 
-        val expectedResult = Result.success(defaultDeck)
+        val expectedResult = RequestState.Success(defaultDeck)
         coEvery { repository.shuffleDeck(deckId) } returns expectedResult
 
         val response = useCase.invoke(deckId)
@@ -35,7 +36,7 @@ class ShuffleCardsUseCaseImplTest {
         val deckId = DECK_ID
         val pileName = PILE_NAME
 
-        val expectedResult = Result.success(defaultDeck)
+        val expectedResult = RequestState.Success(defaultDeck)
         coEvery { repository.shufflePile(pileName, deckId) } returns expectedResult
 
         val response = useCase.invoke(deckId, pileName)

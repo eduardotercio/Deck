@@ -3,6 +3,7 @@ package com.example.feature.home.data.repository
 import com.example.common.data.mapper.toDeck
 import com.example.common.data.service.local.SharedPreferencesService
 import com.example.common.data.service.remote.DeckOfCardApiService
+import com.example.common.domain.model.RequestState
 import com.example.feature.home.data.util.Const.DECK_ID
 import com.example.feature.home.data.util.Const.DECK_ID2
 import com.example.feature.home.data.util.Const.defaultDeck
@@ -40,8 +41,8 @@ class HomeRepositoryImplTest {
 
             val response = repository.getDeckIds()
 
-            assertTrue(response.isSuccess)
-            response.getOrNull()?.forEach { assertTrue(expectedResponse.contains(it)) }
+            assertTrue(response is RequestState.Success)
+            response.data.forEach { assertTrue(expectedResponse.contains(it)) }
 
             coVerify { servicePreferences.getDeckIds() }
         }
@@ -56,8 +57,8 @@ class HomeRepositoryImplTest {
 
             val response = repository.getNewDeck()
 
-            assertTrue(response.isSuccess)
-            assertEquals(expectedResponse.toDeck(), response.getOrNull())
+            assertTrue(response is RequestState.Success)
+            assertEquals(expectedResponse.toDeck(), response.data)
 
             coVerify { serviceApi.getNewDeck() }
             coVerify { servicePreferences.saveDeckId(expectedResponse.deckId) }
@@ -72,7 +73,7 @@ class HomeRepositoryImplTest {
 
             val response = repository.deleteDeck(deckId)
 
-            assertTrue(response.isSuccess)
+            assertTrue(response is RequestState.Success)
 
             coVerify { servicePreferences.deleteDeckId(deckId) }
         }

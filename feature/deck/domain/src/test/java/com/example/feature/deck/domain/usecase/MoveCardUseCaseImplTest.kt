@@ -1,5 +1,6 @@
 package com.example.feature.deck.domain.usecase
 
+import com.example.common.domain.model.RequestState
 import com.example.feature.deck.domain.model.CardLocation
 import com.example.feature.deck.domain.repository.DeckRepository
 import com.example.feature.deck.domain.util.Const.CARD_CODE
@@ -26,7 +27,7 @@ class MoveCardUseCaseImplTest {
             val deckId = DECK_ID
             val pileName = PILE_NAME
 
-            val expectedResponse = Result.success(defaultDeck)
+            val expectedResponse = RequestState.Success(defaultDeck)
             coEvery { repository.drawCardFromDeck(deckId, pileName) } returns expectedResponse
 
             val response = useCase.invoke(startLocation, endLocation, deckId, pileName)
@@ -45,7 +46,7 @@ class MoveCardUseCaseImplTest {
             val pileName = PILE_NAME
             val cardCode = CARD_CODE
 
-            val expectedResponse = Result.success(defaultDeck)
+            val expectedResponse = RequestState.Success(defaultDeck)
             coEvery {
                 repository.returnCardToDeck(
                     deckId,
@@ -70,7 +71,7 @@ class MoveCardUseCaseImplTest {
             val pileName = PILE_NAME
             val cardCode = CARD_CODE
 
-            val expectedResponse = Result.success(defaultDeck)
+            val expectedResponse = RequestState.Success(defaultDeck)
             coEvery {
                 repository.moveCardToPile(
                     pileName,
@@ -100,7 +101,7 @@ class MoveCardUseCaseImplTest {
             val deckId = DECK_ID
             val pileName = PILE_NAME
 
-            val expectedResponse = Result.success(defaultDeck)
+            val expectedResponse = RequestState.Success(defaultDeck)
             coEvery { repository.drawCardFromPile(deckId, pileName) } returns expectedResponse
 
             val response = useCase.invoke(startLocation, endLocation, deckId, pileName)
