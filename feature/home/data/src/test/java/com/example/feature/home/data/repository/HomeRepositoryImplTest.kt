@@ -1,6 +1,5 @@
 package com.example.feature.home.data.repository
 
-import com.example.common.data.mapper.toDeck
 import com.example.common.data.service.local.SharedPreferencesService
 import com.example.common.data.service.remote.DeckOfCardApiService
 import com.example.common.domain.model.RequestState
@@ -50,31 +49,43 @@ class HomeRepositoryImplTest {
     @Test
     fun `When call getNewDeck Then it should return a mapped deck and save deckId locally`() =
         runTest {
-            val expectedResponse = defaultDeck
+            val deckId2 = DECK_ID2
+            val deckId = DECK_ID
+            val deckResponse = defaultDeck
 
-            coEvery { serviceApi.getNewDeck() } returns expectedResponse
-            coEvery { servicePreferences.saveDeckId(expectedResponse.deckId) } returns Unit
+            val expectedResponse = listOf(deckId2, deckId)
+
+            coEvery { serviceApi.getNewDeck() } returns deckResponse
+            coEvery { servicePreferences.saveDeckId(deckResponse.deckId) } returns Unit
+            coEvery { servicePreferences.getDeckIds() } returns expectedResponse
 
             val response = repository.getNewDeck()
 
             assertTrue(response is RequestState.Success)
-            assertEquals(expectedResponse.toDeck(), response.data)
+            assertEquals(expectedResponse, response.data)
 
             coVerify { serviceApi.getNewDeck() }
-            coVerify { servicePreferences.saveDeckId(expectedResponse.deckId) }
+            coVerify { servicePreferences.saveDeckId(deckResponse.deckId) }
+            coVerify { servicePreferences.getDeckIds() }
         }
 
     @Test
     fun `Given a deckID When call removeDeck on repository Then it should call deleteDeck at servicePreferences and return success `() =
         runTest {
             val deckId = DECK_ID
+            val deckId2 = DECK_ID2
+
+            val expectedResponse = listOf(deckId, deckId2)
 
             coEvery { servicePreferences.deleteDeckId(deckId) } returns Unit
+            coEvery { servicePreferences.getDeckIds() } returns expectedResponse
 
             val response = repository.deleteDeck(deckId)
 
             assertTrue(response is RequestState.Success)
+            assertEquals(expectedResponse, response.data)
 
             coVerify { servicePreferences.deleteDeckId(deckId) }
+            coVerify { servicePreferences.getDeckIds() }
         }
 }

@@ -1,14 +1,12 @@
 package com.example.common.data.service.local
 
 import android.content.SharedPreferences
-import android.util.Log
 
 class SharedPreferencesServiceImpl(
     private val sharedPreferences: SharedPreferences
 ) : SharedPreferencesService {
     override suspend fun getDeckIds(): List<String> {
         val stringIds = getDeckIdsString()
-        Log.i("deckIds", "stringIds: $stringIds")
 
         return if (stringIds.isEmpty()) {
             emptyList()
@@ -22,7 +20,6 @@ class SharedPreferencesServiceImpl(
         val newDeckId = "$deckId/"
         val stringIds = getDeckIdsString()
         val newValue = stringIds.plus(newDeckId)
-        Log.i("Response: ", "newValue: $newValue")
 
         sharedPreferences.edit().putString(KEY_DECK_IDS, newValue).apply()
     }
