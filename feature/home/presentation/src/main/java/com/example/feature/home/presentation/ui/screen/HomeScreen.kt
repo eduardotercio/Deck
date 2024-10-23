@@ -31,6 +31,7 @@ import com.example.common.designsystem.dimens.Dimens.big
 import com.example.common.designsystem.dimens.Dimens.default
 import com.example.common.designsystem.dimens.Dimens.huge
 import com.example.common.designsystem.dimens.Dimens.medium
+import com.example.common.designsystem.dimens.Dimens.small
 import com.example.common.designsystem.dimens.responsiveSp
 import com.example.common.designsystem.theme.backgroundGradientColor
 import com.example.common.designsystem.theme.designSystemThemePalette
@@ -132,7 +133,7 @@ private fun HomeScreenContent(
                                     onEvent(HomeScreenContract.Event.OpenConfirmationDialog(deckId))
                                 }
                             )
-                            .padding(default)
+                            .padding(small)
                     )
                 }
             }

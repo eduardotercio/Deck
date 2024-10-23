@@ -25,8 +25,8 @@ fun HomeScreenRoute(
         onEvent = { event ->
             viewModel.setEvent(event)
         },
-        navigateToDeckScreen = {
-            navController.navigate(Route.Deck(deckId = it))
+        navigateToDeckScreen = { deckId ->
+            navController.navigate(Route.Deck(deckId = deckId))
         }
     )
 }

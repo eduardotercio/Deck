@@ -21,7 +21,7 @@ class DeckRepositoryImpl(
                 RequestState.Success(deck)
             }.getOrElse { exception ->
                 val errorMessage = exception.message.toString()
-                Log.e(ERROR_TAG, errorMessage)
+                Log.e(ERROR_TAG, "getPile -> $errorMessage")
                 RequestState.Error(errorMessage)
             }
         }
@@ -40,7 +40,7 @@ class DeckRepositoryImpl(
                 RequestState.Success(pileResponse.toDeck())
             }.getOrElse { exception ->
                 val errorMessage = exception.message.toString()
-                Log.e(ERROR_TAG, errorMessage)
+                Log.e(ERROR_TAG, "drawCardFromDeck -> $errorMessage")
                 RequestState.Error(errorMessage)
             }
         }
@@ -59,7 +59,7 @@ class DeckRepositoryImpl(
                 RequestState.Success(pileResponse.toDeck())
             }.getOrElse { exception ->
                 val errorMessage = exception.message.toString()
-                Log.e(ERROR_TAG, errorMessage)
+                Log.e(ERROR_TAG, "drawCardFromPile -> $errorMessage")
                 RequestState.Error(errorMessage)
             }
         }
@@ -78,7 +78,7 @@ class DeckRepositoryImpl(
                 RequestState.Success(response.toDeck())
             }.getOrElse { exception ->
                 val errorMessage = exception.message.toString()
-                Log.e(ERROR_TAG, errorMessage)
+                Log.e(ERROR_TAG, "returnCardToDeck -> $errorMessage")
                 RequestState.Error(errorMessage)
             }
         }
@@ -97,7 +97,7 @@ class DeckRepositoryImpl(
                 RequestState.Success(response.toDeck())
             }.getOrElse { exception ->
                 val errorMessage = exception.message.toString()
-                Log.e(ERROR_TAG, errorMessage)
+                Log.e(ERROR_TAG, "moveCardToPile -> $errorMessage")
                 RequestState.Error(errorMessage)
             }
         }
@@ -111,7 +111,7 @@ class DeckRepositoryImpl(
                 RequestState.Success(response.toDeck())
             }.getOrElse { exception ->
                 val errorMessage = exception.message.toString()
-                Log.e(ERROR_TAG, errorMessage)
+                Log.e(ERROR_TAG, "shuffleDeck -> $errorMessage")
                 RequestState.Error(errorMessage)
             }
         }
@@ -125,7 +125,7 @@ class DeckRepositoryImpl(
                 RequestState.Success(response.toDeck())
             }.getOrElse { exception ->
                 val errorMessage = exception.message.toString()
-                Log.e(ERROR_TAG, errorMessage)
+                Log.e(ERROR_TAG, "shufflePile -> $errorMessage")
                 RequestState.Error(errorMessage)
             }
         }

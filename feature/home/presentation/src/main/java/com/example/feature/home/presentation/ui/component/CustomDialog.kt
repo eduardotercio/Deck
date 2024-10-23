@@ -47,8 +47,8 @@ fun CustomDialog(
             Column(modifier = Modifier.fillMaxWidth()) {
                 Box(modifier = Modifier.fillMaxWidth()) {
                     Text(
-                        text = "Deleting this Deck will erase him from you phone, do you want to continue?",
-                        color = designSystemThemePalette.textPrimary,
+                        text = stringResource(id = R.string.dialog_description),
+                        color = designSystemThemePalette.onSurfaceColor,
                         fontSize = 20.sp.responsiveSp(),
                         fontFamily = mavenProFontFamily,
                         fontWeight = FontWeight.SemiBold,

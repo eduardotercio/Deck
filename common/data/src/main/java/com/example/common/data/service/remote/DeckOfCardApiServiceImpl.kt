@@ -6,6 +6,8 @@ import com.example.common.data.util.Const.BASE_URL
 import com.example.common.data.util.Const.CARDS
 import com.example.common.data.util.Const.COUNT
 import com.example.common.data.util.Const.REMAINING
+import com.example.common.domain.util.Const.EMPTY
+import com.example.common.domain.util.Const.HAND_PILE
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -18,7 +20,10 @@ class DeckOfCardApiServiceImpl(
         val url = "$BASE_URL/new/"
         val request = httpClient.get(url)
 
-        return request.body<DeckResponse>()
+        val response = request.body<DeckResponse>()
+        createDeckPiles(response.deckId)
+
+        return response
     }
 
     override suspend fun getPiles(deckId: String, pileName: String): PileResponse {
@@ -78,6 +83,18 @@ class DeckOfCardApiServiceImpl(
             parameter(COUNT, ONE)
         }
         return request.body<PileResponse>()
+    }
+
+    private suspend fun createDeckPiles(deckId: String) {
+        val createHandPileUrl = "$BASE_URL/$deckId/pile/$HAND_PILE/add/"
+        httpClient.get(createHandPileUrl) {
+            parameter(CARDS, EMPTY)
+        }
+
+        val createTrashPileUrl = "$BASE_URL/$deckId/pile/$HAND_PILE/add/"
+        httpClient.get(createTrashPileUrl) {
+            parameter(CARDS, EMPTY)
+        }
     }
 
     private companion object {

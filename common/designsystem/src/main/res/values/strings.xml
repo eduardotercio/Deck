@@ -3,4 +3,5 @@
 
     <string name="dialog_cancel_button">Cancel</string>
     <string name="dialog_delete_button">Delete</string>
+    <string name="dialog_description">Deleting this Deck will erase him from you phone, do you want to continue?</string>
 </resources>

@@ -84,6 +84,7 @@ class HomeScreenViewModel(
         val result = deleteDeckUseCase(deckId)
         when (result) {
             is RequestState.Success -> {
+                setEffect { HomeScreenContract.Effect.CloseConfirmationDialog }
                 setState {
                     copy(
                         deckIds = result.data
