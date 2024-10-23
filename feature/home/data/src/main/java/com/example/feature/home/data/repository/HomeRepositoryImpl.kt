@@ -31,11 +31,8 @@ class HomeRepositoryImpl(
             runCatching {
                 val response = serviceApi.getNewDeck()
                 servicePreferences.saveDeckId(response.deckId)
-                Log.i("Response: ", "deckId: ${response.deckId}")
 
                 val deckIds = servicePreferences.getDeckIds()
-
-                Log.i("Response: ", "Ids: $deckIds")
 
                 RequestState.Success(deckIds)
             }.getOrElse {
