@@ -4,5 +4,5 @@ import com.example.common.domain.model.RequestState
 
 interface DeleteDeckUseCase {
 
-    suspend operator fun invoke(deckId: String): RequestState<Unit>
+    suspend operator fun invoke(deckId: String): RequestState<List<String>>
 }

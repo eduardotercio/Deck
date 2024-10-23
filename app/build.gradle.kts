@@ -78,4 +78,5 @@ dependencies {
     implementation(project(":feature:deck:presentation"))
     implementation(project(":feature:home:data"))
     implementation(project(":feature:home:domain"))
+    implementation(project(":feature:home:presentation"))
 }
