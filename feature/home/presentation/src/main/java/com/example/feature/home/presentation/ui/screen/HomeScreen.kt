@@ -92,7 +92,7 @@ private fun HomeScreenContent(
     if (showDialog) {
         CustomDialog(
             onCancelClicked = { onEvent(HomeScreenContract.Event.CloseConfirmationDialog) },
-            onContinueClicked = { onEvent(HomeScreenContract.Event.DeleteDeckSelected) }
+            onContinueClicked = { onEvent(HomeScreenContract.Event.DeleteLastDeckSelected) }
         )
     }
 

@@ -8,7 +8,7 @@ object HomeScreenContract {
     interface Event : UiEvent {
         data object GetDeckIds : Event
         data object GetNewDeck : Event
-        data object DeleteDeckSelected : Event
+        data object DeleteLastDeckSelected : Event
 
         data class NavigateToDeckScreen(
             val deckId: String

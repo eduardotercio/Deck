@@ -27,7 +27,7 @@ class HomeScreenViewModel(
                     getNewDeck()
                 }
 
-                is HomeScreenContract.Event.DeleteDeckSelected -> {
+                is HomeScreenContract.Event.DeleteLastDeckSelected -> {
                     deleteDeck()
                 }
 
@@ -36,7 +36,7 @@ class HomeScreenViewModel(
                 }
 
                 is HomeScreenContract.Event.OpenConfirmationDialog -> {
-                    setEffect { HomeScreenContract.Effect.OpenConfirmationDialog }
+                    openDialog(event.deckId)
                 }
 
                 is HomeScreenContract.Event.CloseConfirmationDialog -> {
@@ -94,5 +94,14 @@ class HomeScreenViewModel(
 
             is RequestState.Error -> {}
         }
+    }
+
+    private fun openDialog(deckId: String) {
+        setState {
+            copy(
+                lastDeckIdSelected = deckId
+            )
+        }
+        setEffect { HomeScreenContract.Effect.OpenConfirmationDialog }
     }
 }

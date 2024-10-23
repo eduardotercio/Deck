@@ -26,12 +26,21 @@ android {
         compose = true
     }
     buildTypes {
+        signingConfigs {
+            create("release") {
+                storeFile = file("../keystore/keystore.jks")
+                storePassword = "deck123"
+                keyAlias = "deck"
+                keyPassword = "deck123"
+            }
+        }
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
