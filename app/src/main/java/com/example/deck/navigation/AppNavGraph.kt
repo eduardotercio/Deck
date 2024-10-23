@@ -1,13 +1,13 @@
 package com.example.deck.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.example.common.presentation.model.Route
 import com.example.feature.deck.presentation.ui.route.DeckScreenRoute
+import com.example.feature.home.presentation.ui.route.HomeScreenRoute
 
 @Composable
 fun NavGraph(navController: NavHostController) {
@@ -16,7 +16,7 @@ fun NavGraph(navController: NavHostController) {
         startDestination = Route.Home
     ) {
         composable<Route.Home> {
-            HomeScreen(
+            HomeScreenRoute(
                 navController = navController
             )
         }
@@ -27,9 +27,4 @@ fun NavGraph(navController: NavHostController) {
         }
     }
 
-}
-
-@Composable
-fun HomeScreen(navController: NavController) {
-    navController.navigate(Route.Deck("u7s8sr4usyz2"))
 }

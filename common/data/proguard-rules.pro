@@ -22,3 +22,5 @@
 
 -keepattributes Serializable, *Annotation*
 -keep class kotlinx.serialization.** { *; }
+
+-keep class com.example.common.data.model.** { *; }
